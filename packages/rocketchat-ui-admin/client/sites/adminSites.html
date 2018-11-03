@@ -1,0 +1,73 @@
+<template name="adminSites">
+	<div class="main-content-flex">
+		<section class="page-container page-list flex-tab-main-content">
+			{{> header sectionName="SiteManage"}}
+
+			<div class="content">
+					<form class="search-form" role="form">
+						<div class="rc-input__wrapper">
+							<div class="rc-input__icon">
+								{{#if isReady}}
+									{{> icon block="rc-input__icon-svg" icon="magnifier" }}
+								{{else}}
+									{{> loading }}
+								{{/if}}
+							</div>
+							<input id="users-filter" type="text" class="rc-input__element"
+								   placeholder="{{_ "Search"}}" autofocus dir="auto">
+					 	</div>
+					</form>
+					<div class="results">
+						<!--{{{_ "Showing_results" users.length}}}-->
+					</div>
+					<div class="list">
+						<table class="secondary-background-color">
+							<thead>
+								<tr class="admin-table-row">
+									<th class="content-background-color border-component-color" width="30%">{{_ "SiteUrl"}}</th>
+									<th class="content-background-color border-component-color" width="30%">{{_ "Email"}}</th>
+									<th class="content-background-color border-component-color" width="15%">{{_ "Status"}}</th>
+									<th class="content-background-color border-component-color" width="15%">{{_ "Invite"}}</th>
+									<th class="content-background-color border-component-color" width="15%">{{_ "Delete"}}</th>
+								</tr>
+							</thead>
+							<tbody>
+								{{#each sites}}
+									<tr class="site-info row-link ">
+										<td class="border-component-color">{{_id}}</td>
+										<td class="border-component-color">{{email}}</td>
+										{{#if status}}
+											<td class="border-component-color">enable</td>
+										{{else}}
+											<td class="border-component-color">disable</td>
+										{{/if}}
+										<td class="border-component-color">
+											{{#if invite}}
+												<!--<button style = "margin-left: 10px">-->
+													<!--{{> icon block="tab-button-icon" icon='send' }}-->
+												<!--</button>-->
+											{{else}}
+												<button style = "margin-left: 10px">
+													{{> icon block="tab-button-icon" icon='send' }}
+												</button>
+											{{/if}}
+										</td>
+										<td class="border-component-color">
+											<button style = "margin-left: 13px">
+												<i class="icon-trash"></i>
+											</button>
+										</td>
+									</tr>
+								{{/each}}
+							</tbody>
+						</table>
+
+					</div>
+
+			</div>
+		</section>
+		{{#with flexData}}
+			{{> flexTabBar}}
+		{{/with}}
+	</div>
+</template>

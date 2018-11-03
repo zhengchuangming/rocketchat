@@ -1,0 +1,61 @@
+<template name="siteEdit">
+	{{#unless canEditOrAdd}}
+		<p class="secondary-font-color">{{_ "You_are_not_authorized_to_view_this_page"}}</p>
+	{{else}}
+	<form class="" action="index.html" method="post" autocomplete="off">
+		<!-- Site Url /123qwe123qwe-->
+		<div class="rc-input rc-form-group rc-form-group--small">
+			<label class="rc-input__label">
+				<div class="rc-input__title">{{_ "SiteUrl"}}</div>
+				<div class="rc-input__wrapper">
+					<input name="name" type="text" class="rc-input__element rc-input__element--small" id="site_url" autocomplete="off" value="{{site._id}}"/>
+				</div>
+			</label>
+		</div>
+		<!-- Email /123qwe123qwe-->
+		<div class="rc-form-group rc-form-group--small">
+			<div class="rc-input">
+				<label class="rc-input__label">
+					<div class="rc-input__title">{{_ "Email"}}</div>
+					<div class="rc-input__wrapper">
+						<div class="rc-input__icon">
+							{{> icon icon='mail' }}
+						</div>
+						<input name="name" type="text" class="rc-input__element rc-input__element--small" id="email" autocomplete="off" value="{{site.email}}"/>
+					</div>
+				</label>
+			</div>
+			<!--<div class="rc-switch">-->
+				<!--<label class="rc-switch__label" tabindex="-1">-->
+					<!--<input type="checkbox" class="rc-switch__input" name="type" id="verified" value="1" checked="{{user.emails.[0].verified}}"/>-->
+					<!--<span class="rc-switch__button">-->
+						<!--<span class="rc-switch__button-inside"></span>-->
+					<!--</span>-->
+					<!--<span class="rc-switch__text">-->
+						<!--{{_ "Verified"}}-->
+					<!--</span>-->
+				<!--</label>-->
+			<!--</div>-->
+		</div>
+
+
+
+		<div class="rc-form-group rc-form-group--small rc-switch">
+			<label class="rc-switch__label" tabindex="-1">
+				<input class="rc-switch__input" type="checkbox" id="status" value="1" checked="{{site.status}}"/>
+				<span class="rc-switch__button">
+					<span class="rc-switch__button-inside"></span>
+				</span>
+				<span class="rc-switch__text">
+					{{_ "Status"}}
+				</span>
+			</label>
+		</div>
+
+		<div class="rc-user-info__flex rc-user-info__row">
+			<button class='rc-button rc-button--cancel cancel' type="button"><span>{{_ "Cancel"}}</span></button>
+			<button class='rc-button rc-button--primary save'><span>{{_ "Save"}}</span></button>
+		</div>
+	</form>
+	{{/unless}}
+</template>
