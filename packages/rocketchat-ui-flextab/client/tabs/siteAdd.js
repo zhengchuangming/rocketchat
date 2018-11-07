@@ -98,12 +98,18 @@ Template.siteAdd.onCreated(function() {
 		// if (!this.validate()) {
 		// 	return;
 		// }
+
 		const siteData = this.getSiteData();
-		console.log("changed_id",siteData.changed_id);
-		console.log("email",siteData.email);
-		console.log("status",siteData.status);
-		console.log("invite",siteData.invite);
-		//
+
+        if (!/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/.test(siteData._id)) {
+            toastr.error(t('Invalid domain name'));
+            return;
+        }
+		if(!/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(siteData.email)){
+            toastr.error(t('Invalid email name'));
+            return;
+		}
+
 		Meteor.call('insertSite', siteData, (error) => {
 			if (error == "duplicated") {
 				toastr.error(t('duplicated url exist'));

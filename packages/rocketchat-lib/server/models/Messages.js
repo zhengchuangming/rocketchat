@@ -782,7 +782,13 @@ RocketChat.models.Messages = new class extends RocketChat.models._Base {
 		return this.createWithTypeRoomIdMessageAndUser('subscription-role-removed', roomId, message, user, extraData);
 	}
 
-	// REMOVE
+    removeByUserId(userId){
+
+        const query =	{ 'u._id': userId };
+
+        return this.remove(query);
+    }
+
 	removeById(_id) {
 		console.log("removeById(_id) {");
 		const query =	{ _id };
@@ -841,13 +847,6 @@ RocketChat.models.Messages = new class extends RocketChat.models._Base {
 				$in: messagesToDelete,
 			},
 		});
-	}
-
-	removeByUserId(userId) {
-		console.log("removeByUserId(userId) {");
-		const query =	{ 'u._id': userId };
-
-		return this.remove(query);
 	}
 
 	removeFilesByRoomId(roomId) {

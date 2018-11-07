@@ -33,15 +33,16 @@
 							</thead>
 							<tbody>
 								{{#each sites}}
+									<!--show list of siteManagers-->
 									<tr class="site-info row-link ">
-										<td class="border-component-color">{{_id}}</td>
-										<td class="border-component-color">{{email}}</td>
+										<td class="border-component-color siteInfo_td">{{_id}}</td>
+										<td class="border-component-color siteInfo_td">{{email}}</td>
 										{{#if status}}
-											<td class="border-component-color">enable</td>
+											<td class="border-component-color siteInfo_td">enable</td>
 										{{else}}
-											<td class="border-component-color">disable</td>
+											<td class="border-component-color siteInfo_td">disable</td>
 										{{/if}}
-										<td class="border-component-color">
+										<td style = "border-color:#eaeaea" id="invite_siteManager">
 											{{#if invite}}
 												<!--<button style = "margin-left: 10px">-->
 													<!--{{> icon block="tab-button-icon" icon='send' }}-->
@@ -52,7 +53,7 @@
 												</button>
 											{{/if}}
 										</td>
-										<td class="border-component-color">
+										<td style = "border-color:#eaeaea" id="delete_site">
 											<button style = "margin-left: 13px">
 												<i class="icon-trash"></i>
 											</button>

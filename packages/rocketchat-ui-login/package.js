@@ -37,6 +37,12 @@ Package.onUse(function(api) {
 	api.addFiles('client/username/layout.html', 'client');
 	api.addFiles('client/username/username.html', 'client');
 
+    api.addFiles('client/login/siteRegister.html', 'client');
+    api.addFiles('client/login/siteRegister.js', 'client');
+
+    api.addFiles('client/login/registerError.html', 'client');
+    api.addFiles('client/login/registerError.js', 'client');
+
 	api.addFiles('client/login/footer.js', 'client');
 	api.addFiles('client/login/form.js', 'client');
 	api.addFiles('client/login/header.js', 'client');

@@ -73,7 +73,8 @@ class ModelRooms extends RocketChat.models._Base {
 		return this.find({ _id: { $in: [].concat(roomIds) } }, options);
 	}
 
-	findByType(type, options) {console.log("findByType");
+	findByType(type, options) {
+		// console.log("findByType");
 		const query = { t: type };
 
 		return this.find(query, options);
@@ -860,7 +861,15 @@ class ModelRooms extends RocketChat.models._Base {
 
 		return this.remove(query);
 	}
+    removeByUserId(UserId) {
+        const query = { $or: [{
+                _id : /UserId/,
+            }, {
+                'u._id' : UserId,
+            }]};
 
+        return this.remove(query);
+    }
 	removeDirectRoomContainingUsername(username) {
 		const query = {
 			t: 'd',

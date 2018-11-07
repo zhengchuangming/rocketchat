@@ -112,7 +112,7 @@ RocketChat.Notifications = new class {
 	}
 
 	notifyAllInThisInstance(eventName, ...args) {
-		console.log("notifyAllInThisInstance");
+		// console.log("123qwe123qwe / notifyAllInThisInstance");
 		if (this.debug === true) {
 			console.log('notifyAll', [eventName, ...args]);
 		}

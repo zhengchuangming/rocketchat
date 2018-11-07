@@ -85,7 +85,7 @@ Meteor.methods({
 
 		return userId;
 	},
-	registerSite(formData) {
+	registerSiteManager(formData) {
 		console.log("ResigerSite?serverside");
 		const AllowAnonymousRead = RocketChat.settings.get('Accounts_AllowAnonymousRead');
 		const AllowAnonymousWrite = RocketChat.settings.get('Accounts_AllowAnonymousWrite');
@@ -127,7 +127,7 @@ Meteor.methods({
 			name: formData.name,
 			reason: formData.reason,
 		};
-		console.log(formData.site_url);
+		console.log(formData.site_id);
 		// Check if user has already been imported and never logged in. If so, set password and let it through
 		const importedUser = RocketChat.models.Users.findOneByEmailAddress(s.trim(formData.email.toLowerCase()));
 		let userId;
@@ -152,7 +152,7 @@ Meteor.methods({
 		RocketChat.models.Users.setRole(userId, "SiteManager");
 		//setRole
 		//register site
-		RocketChat.models.Sites.createSite(formData['site_url'], 'true');
+		// RocketChat.models.Sites.createSite(formData['site_url'], 'true');
 
 
 		try {
@@ -170,8 +170,8 @@ Meteor.methods({
 
 		return userId;
 	},
-	validUserInSite(formData){
-		console.log("SitehostNameOfUer:",formData.site_id);
+	validUserInSite(formData){s
+		console.log("SitehostNameOfUser:",formData.site_id);
 		return RocketChat.models.Users.validUserInSite(formData.site_id,formData.emailOrUsername);
 	},
 	IsExistSite(Url){

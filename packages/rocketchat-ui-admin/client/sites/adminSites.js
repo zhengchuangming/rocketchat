@@ -2,6 +2,7 @@ import _ from 'underscore';
 import s from 'underscore.string';
 
 import { RocketChatTabBar } from 'meteor/rocketchat:lib';
+import toastr from "toastr";
 var Allsites = new Mongo.Collection('rocketchat_registered_sites');
 Template.adminSites.helpers({
 	isReady() {
@@ -109,7 +110,53 @@ Template.adminSites.events({
 		e.preventDefault();
 		t.filter.set(e.currentTarget.value);
 	},
-	'click .site-info'(e, instance) {
+    'click #invite_siteManager'(e, instance) {
+        e.preventDefault();
+        modal.open({
+            title: t('Are_you_sure'),
+            text: t('Are you sure wish to invite siteManager of ' + this._id +'?'),
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: t('Yes'),
+            cancelButtonText: t('Cancel'),
+            closeOnConfirm: true,
+            html: false,
+        }, () => {
+            Meteor.call('inviteSiteManager', this._id , (error) => {
+                if (error) {
+                    return toastr.error(t(error.error));
+                }
+                toastr.success("Successfully e-mail was transformed");
+            });
+        });
+        // instance.tabBarData.set(Allsites.findOne(this._id));
+        // instance.tabBar.open('edit-site');
+    },
+    'click #delete_site'(e, instance) {
+        e.preventDefault();
+        modal.open({
+            title: t('Are_you_sure'),
+            text: t('Are you sure wish to remove this site?'),
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: t('Yes'),
+            cancelButtonText: t('Cancel'),
+            closeOnConfirm: true,
+            html: false,
+        }, () => {
+            Meteor.call('deleteSite', this._id , (error) => {
+                if (error) {
+                    return toastr.error(t(error.error));
+                }
+                toastr.success("Successfully removed");
+            });
+        });
+        // instance.tabBarData.set(Allsites.findOne(this._id));
+        // instance.tabBar.open('edit-site');
+    },
+	'click .siteInfo_td'(e, instance) {
 		e.preventDefault();
 		instance.tabBarData.set(Allsites.findOne(this._id));
 		instance.tabBar.open('edit-site');

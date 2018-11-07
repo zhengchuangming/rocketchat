@@ -1,5 +1,6 @@
 /* globals KonchatNotification */
 import s from 'underscore.string';
+import toastr from "toastr";
 
 Blaze.registerHelper('pathFor', function(path, kw) {
 	return FlowRouter.path(path, kw.hash);
@@ -50,7 +51,29 @@ FlowRouter.route('/login', {
 		FlowRouter.go('home');
 	},
 });
+FlowRouter.route('/site-register', {
+    name: 'site-register',
+	//123qwe123qwe : site-register
+    action(params,queryParams) {
 
+        Meteor.call('validSiteManager', queryParams['key'], (error,data) => {
+            if (error) {
+                return toastr.error(t(error.error));
+            }
+            if(data.siteUrl){//if site is registed
+            	console.log("Ok");
+                BlazeLayout.render('loginLayout', { center: 'siteRegisterForm' ,siteUrl : data.siteUrl});
+			}else if(data.result == '0'){//site manager is already registered
+                console.log("site manager is already registered");
+			}else if(data.result == '1'){//site is not registered
+                console.log("site is not registered");
+			}
+        });
+
+
+        // BlazeLayout.render('registerErrorPage');
+    },
+});
 FlowRouter.route('/home', {
 	name: 'home',
 	action(params, queryParams) {

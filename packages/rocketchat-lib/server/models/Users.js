@@ -79,6 +79,18 @@ class ModelUsers extends RocketChat.models._Base {
 		return this.find(query);
 	}
 
+    findBySiteUrl(siteUrl){
+        const query = { site_id: siteUrl};
+
+        return this.find(query);
+    }
+
+    removeBySiteUrl(siteUrl){
+        const query = { site_id: siteUrl};
+
+        return this.remove(query);
+    }
+
 	findByIds(users, options) {
 		const query = { _id: { $in: users } };
 		return this.find(query, options);

@@ -50,6 +50,13 @@ class ModelSites extends RocketChat.models._Base {
 			return this.insert(siteData);
 		}
 	}
+    removeOneSite(siteUrl){
+        const query = {
+            _id: siteUrl,
+        };
+		return this.remove(query);
+    }
+
 }
 
 RocketChat.models.Sites = new ModelSites('registered_sites', true);
