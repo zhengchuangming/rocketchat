@@ -1,15 +1,35 @@
 import toastr from 'toastr';
 import s from 'underscore.string';
-
+// var enableSitesModel = new Mongo.Collection('rocketchat_registered_sites');
 Template.userEdit.helpers({
-
+    isSuperAdmin(){
+        if(Accounts.user().roles.toString().indexOf('admin') > 0)
+            return true;
+        else
+            return false;
+    },
+    getAccountUser(){
+        return Accounts.user();
+    },
+    isSameSiteUrl: function(siteUrl){
+        if(siteUrl == Template.instance().user.site_id)
+            return true;
+        else
+            return false;
+    },
+    isReady() {
+        const instance = Template.instance();
+        return instance.ready && instance.ready.get();
+    },
 	disabled(cursor) {
 		return cursor.count() === 0 ? 'disabled' : '';
 	},
 	canEditOrAdd() {
 		return (Template.instance().user && RocketChat.authz.hasAtLeastOnePermission('edit-other-user-info')) || (!Template.instance().user && RocketChat.authz.hasAtLeastOnePermission('create-user'));
 	},
-
+    enableSites() {
+        return Template.instance().enableSites();
+    },
 	user() {
 		return Template.instance().user;
 	},
@@ -90,6 +110,7 @@ Template.userEdit.events({
 
 Template.userEdit.onCreated(function() {
 	this.user = this.data != null ? this.data.user : undefined;
+    // console.log("SiteId of User:",this.user.site_id);
 	this.roles = this.user ? new ReactiveVar(this.user.roles) : new ReactiveVar([]);
 
 
@@ -105,6 +126,19 @@ Template.userEdit.onCreated(function() {
 		}
 	};
 
+    this.autorun(function() {
+    	//123qwe123qwe / subscribe for Site model
+        const filter = "";
+        const limit = 50;
+        const subscription = Meteor.subscribe('sites',filter,limit,'true');
+        // const subscription = Meteor.subscribe('getEnableSites',filter,limit);
+        // instance.ready.set(subscription.ready());
+    });
+
+    this.enableSites = function() {
+        return RocketChat.models.Sites.find();
+    };
+
 	this.getUserData = () => {
 		const userData = { _id: (this.user != null ? this.user._id : undefined) };
 		userData.name = s.trim(this.$('#name').val());
@@ -115,8 +149,9 @@ Template.userEdit.onCreated(function() {
 		userData.requirePasswordChange = this.$('#changePassword:checked').length > 0;
 		userData.joinDefaultChannels = this.$('#joinDefaultChannels:checked').length > 0;
 		userData.sendWelcomeEmail = this.$('#sendWelcomeEmail:checked').length > 0;
-		const roleSelect = this.$('.remove-role').toArray();
+		userData.site_id = this.$('#urlSelect').val();
 
+		const roleSelect = this.$('.remove-role').toArray();
 		if (roleSelect.length > 0) {
 			const notSorted = roleSelect.map((role) => role.title);
 			// Remove duplicate strings from the array
@@ -138,11 +173,15 @@ Template.userEdit.onCreated(function() {
 		if (!userData.email) {
 			errors.push('Email');
 		}
-
+        if (!userData.email) {
+            errors.push('Email');
+        }
 		if (!userData.roles) {
 			errors.push('Roles');
 		}
-
+        if(!userData.site_id){
+            errors.push('SiteURL');
+		}
 		for (const error of Array.from(errors)) {
 			toastr.error(TAPi18n.__('error-the-field-is-required', { field: TAPi18n.__(error) }));
 		}

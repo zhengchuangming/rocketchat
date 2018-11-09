@@ -156,6 +156,7 @@ Template.loginForm.events({
 				formData.secretURL = FlowRouter.getParam('hash');
 				// toastr.error(t('loginForm is display!!!'));
 				if(Template.IsSite)
+
 						return Meteor.call('registerSite', formData, function(error) {
 						instance.loading.set(false);
 						if (error != null) {
@@ -179,36 +180,30 @@ Template.loginForm.events({
 						});
 					});
 				else{
-					Meteor.call('validUserInSite', formData,function(error,result) {
-						instance.loading.set(false);
-						if (error != null || !result) {
-							toastr.error(t('User_not_found_or_incorrect_password'));
-							return;
-						} else {
-							return Meteor.call('registerUser', formData, function (error) {
-								instance.loading.set(false);
-								if (error != null) {
-									if (error.reason === 'Email already exists.') {
-										toastr.error(t('Email_already_exists'));
-									} else {
-										handleError(error);
-									}
-									return;
+
+						return Meteor.call('registerUser', formData, function (error) {
+							instance.loading.set(false);
+							if (error != null) {
+								if (error.reason === 'Email already exists.') {
+									toastr.error(t('Email_already_exists'));
+								} else {
+									handleError(error);
 								}
-								RocketChat.callbacks.run('userRegistered');
-								return Meteor.loginWithPassword(s.trim(formData.email), formData.pass, function (error) {
-									if (error && error.error === 'error-invalid-email') {
-										toastr.success(t('We_have_sent_registration_email'));
-										return instance.state.set('login');
-									} else if (error && error.error === 'error-user-is-not-activated') {
-										return instance.state.set('wait-activation');
-									} else {
-										Session.set('forceLogin', false);
-									}
-								});
+								return;
+							}
+							RocketChat.callbacks.run('userRegistered');
+							return Meteor.loginWithPassword(s.trim(formData.email), formData.pass, function (error) {
+								if (error && error.error === 'error-invalid-email') {
+									toastr.success(t('We_have_sent_registration_email'));
+									return instance.state.set('login');
+								} else if (error && error.error === 'error-user-is-not-activated') {
+									return instance.state.set('wait-activation');
+								} else {
+									Session.set('forceLogin', false);
+								}
 							});
-						}
-					});
+						});
+
 				}
 
 			} else {

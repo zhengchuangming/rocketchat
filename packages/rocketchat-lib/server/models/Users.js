@@ -116,7 +116,7 @@ class ModelUsers extends RocketChat.models._Base {
 		return this.find(query, options);
 	}
 	findByUsernameAndSiteId(siteId, username, options) {
-		const query = { username,site_id:siteId };
+		const query = { username,site_id:siteId ,roles:{$in:[['admin'],['admin']]}};
 		console.log("findByUsernameAndSiteId");
 		return this.find(query, options);
 	}
@@ -159,7 +159,7 @@ class ModelUsers extends RocketChat.models._Base {
 		return this.find(query, options);
 	}
 
-	findByActiveUsersExcept(siteId, searchTerm, exceptions, options) {
+	findByActiveUsersExcept(searchTerm, exceptions, options) {
 		if (exceptions == null) { exceptions = []; }
 		if (options == null) { options = {}; }
 		if (!_.isArray(exceptions)) {
@@ -181,16 +181,42 @@ class ModelUsers extends RocketChat.models._Base {
 				{
 					username: { $exists: true, $nin: exceptions },
 				},
-				{
-					site_id : siteId,
-				}
 			],
 		};
-		console.log("findByActiveUsersExcept###############################:",siteId);
 		// do not use cache
 		return this._db.find(query, options);
 	}
+    findByActiveUsersExceptAndSiteId(siteId, searchTerm, exceptions, options) {
+        if (exceptions == null) { exceptions = []; }
+        if (options == null) { options = {}; }
+        if (!_.isArray(exceptions)) {
+            exceptions = [exceptions];
+        }
 
+        const termRegex = new RegExp(s.escapeRegExp(searchTerm), 'i');
+
+        const orStmt = _.reduce(RocketChat.settings.get('Accounts_SearchFields').trim().split(','), function(acc, el) {
+            acc.push({ [el.trim()]: termRegex });
+            return acc;
+        }, []);
+        const query = {
+            $and: [
+                {
+                    active: true,
+                    $or: orStmt,
+                },
+                {
+                    username: { $exists: true, $nin: exceptions },
+                },
+                {
+                    site_id : siteId,
+                }
+            ],
+        };
+        console.log("findByActiveUsersExcept###############################:",siteId);
+        // do not use cache
+        return this._db.find(query, options);
+    }
 	findUsersByNameOrUsername(nameOrUsername, options) {
 		const query = {
 			username: {

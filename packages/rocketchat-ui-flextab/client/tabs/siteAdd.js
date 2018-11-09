@@ -102,11 +102,11 @@ Template.siteAdd.onCreated(function() {
 		const siteData = this.getSiteData();
 
         if (!/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/.test(siteData._id)) {
-            toastr.error(t('Invalid domain name'));
+            toastr.error(t('Invalid domain name') + '<br> ex:) www.sample.com');
             return;
         }
 		if(!/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(siteData.email)){
-            toastr.error(t('Invalid email name'));
+            toastr.error(t('Invalid email name ') + '<br> ex:) sample@aaa.com');
             return;
 		}
 
@@ -123,7 +123,7 @@ Template.siteAdd.onCreated(function() {
 	this.getSiteData = () => {
 		const siteData = {_id : s.trim(this.$('#site_url').val())};
 		siteData.email = s.trim(this.$('#email').val());
-		siteData.status = this.$('#status:checked').length > 0;
+		siteData.status = false;
 		siteData.invite = false;
 		return siteData;
 	};

@@ -225,6 +225,21 @@ class ModelRooms extends RocketChat.models._Base {
 		return this.find(query, options);
 	}
 
+    findByName(name){
+
+		console.log("name======:",name);
+        const query = {
+            $or: [
+                { name: name },
+                {
+                    t: 'd',
+                    usernames: name,
+                },
+            ],
+        };
+
+        return this.find(query);
+	}
 	findByNameAndTypeAndSiteId(siteId, name, type, options) {console.log("findByNameAndTypeAndSiteId");
 		const query = {
 			t: type,

@@ -26,28 +26,44 @@
 						<table class="secondary-background-color">
 							<thead>
 								<tr class="admin-table-row">
-									<th class="content-background-color border-component-color">&nbsp;</th>
-									<th class="content-background-color border-component-color" width="34%">{{_ "Name"}}</th>
-									<th class="content-background-color border-component-color" width="33%">{{_ "Username"}}</th>
-									<th class="content-background-color border-component-color" width="33%">{{_ "Email"}}</th>
-									<th class="content-background-color border-component-color" width="33%">{{_ "Roles"}}</th>
-									<th class="content-background-color border-component-color" width="33%">{{_ "Status"}}</th>
+									{{#if isSuperAdmin}}
+										<th class="content-background-color border-component-color">&nbsp;</th>
+										<th class="content-background-color border-component-color" width="20%">{{_ "SiteUrl"}}</th>
+										<th class="content-background-color border-component-color" width="15%">{{_ "Name"}}</th>
+										<th class="content-background-color border-component-color" width="20%">{{_ "Username"}}</th>
+										<th class="content-background-color border-component-color" width="25%">{{_ "Email"}}</th>
+										<th class="content-background-color border-component-color" width="20%">{{_ "Roles"}}</th>
+										<th class="content-background-color border-component-color" width="15%">{{_ "Status"}}</th>
+									{{else}}
+										<th class="content-background-color border-component-color">&nbsp;</th>
+										<th class="content-background-color border-component-color" width="25%">{{_ "Name"}}</th>
+										<th class="content-background-color border-component-color" width="25%">{{_ "Username"}}</th>
+										<th class="content-background-color border-component-color" width="30%">{{_ "Email"}}</th>
+										<th class="content-background-color border-component-color" width="20%">{{_ "Roles"}}</th>
+										<th class="content-background-color border-component-color" width="15%">{{_ "Status"}}</th>
+									{{/if}}
 								</tr>
 							</thead>
 							<tbody>
 								{{#each users}}
-								<tr class="user-info row-link {{#if not active}}deactivated{{/if}}">
-									<td class="border-component-color">
-										<div class="user-image status-{{status}}">
-											{{> avatar username=username}}
-										</div>
-									</td>
-									<td class="border-component-color">{{name}}</td>
-									<td class="border-component-color">{{username}}</td>
-									<td class="border-component-color">{{emailAddress}}</td>
-									<td class="border-component-color">{{roles}}</td>
-									<td class="border-component-color">{{status}}</td>
-								</tr>
+									{{#if isYou username}}
+									{{else}}
+										<tr class="user-info row-link {{#if not active}}deactivated{{/if}}">
+											<td class="border-component-color">
+												<div class="user-image status-{{status}}">
+													{{> avatar username=username}}
+												</div>
+											</td>
+											{{#if isSuperAdmin}}
+												<td class="border-component-color">{{site_id}}</td>
+											{{/if}}
+											<td class="border-component-color">{{name}}</td>
+											<td class="border-component-color">{{username}}</td>
+											<td class="border-component-color">{{emailAddress}}</td>
+											<td class="border-component-color">{{roles}}</td>
+											<td class="border-component-color">{{status}}</td>
+										</tr>
+									{{/if}}
 								{{/each}}
 							</tbody>
 						</table>

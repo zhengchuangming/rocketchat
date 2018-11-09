@@ -47,6 +47,27 @@
 			</div>
 		</div>
 
+		<label for="urlSelect">{{_ "SiteURL"}}</label>
+		<div class="rc-form-group rc-form-group--small rc-form-group--inline">
+			{{#if isSuperAdmin}}
+				{{#let lstSite=enableSites}}
+					<select id="urlSelect" class="rc-input rc-form-item-inline rc-input--small">
+						<option value="placeholder" disabled selected>{{_ "Select_URL"}}</option>
+						{{#each lstSite}}
+							{{#if isSameSiteUrl _id}}
+								<option value="{{_id}}" selected>{{_id}}</option>
+							{{else}}
+								<option value="{{_id}}">{{_id}}</option>
+							{{/if}}
+						{{/each}}
+					</select>
+				{{/let}}
+			{{else}}
+				<select id="urlSelect" class="rc-input rc-form-item-inline rc-input--small">
+					<option value="{{getAccountUser.site_id}}" selected>{{getAccountUser.site_id}}</option>
+				</select>
+			{{/if}}
+		</div>
 
 		{{#if hasPermission 'edit-other-user-password'}}
 		<div class="rc-form-group rc-form-group--small rc-form-group--inline">

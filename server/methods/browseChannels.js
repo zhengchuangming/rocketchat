@@ -23,6 +23,7 @@ const sortUsers = function(field, direction) {
 };
 
 Meteor.methods({
+	//123qwe123qwe / user and channel search in directory
 	browseChannels({ text = '', type = 'channels', sortBy = 'name', sortDirection = 'asc', page, offset, limit = 10 }) {
 		const regex = new RegExp(s.trim(s.escapeRegExp(text)), 'i');
 
@@ -52,41 +53,81 @@ Meteor.methods({
 		};
 
 		const user = Meteor.user();
-		// console.log("123qwe123qwebrowseChannels:");
+		// console.log("123qwe123qwe / browseChannels:");
 		var siteId ;
 		if(user) {
-			siteId = RocketChat.models.Users.findOneById(user._id).site_id;
 
-			if (type === 'channels') {
+			const UserInfo = RocketChat.models.Users.findOneById(user._id);
 
-				const sort = sortChannels(sortBy, sortDirection);
-				if (!RocketChat.authz.hasPermission(user._id, 'view-c-room')) {
-					return;
-				}
-				return {
-					results: RocketChat.models.Rooms.findByNameAndTypeAndSiteId(siteId, regex),
-					total: RocketChat.models.Rooms.findByNameAndTypeAndSiteId(siteId, regex).length,
-				};
+		// if superManager
+            if(UserInfo.roles.toString().indexOf('admin') > 0){
+                if (type === 'channels') {
+                    const sort = sortChannels(sortBy, sortDirection);
+                    if (!RocketChat.authz.hasPermission(user._id, 'view-c-room')) {
+                        return;
+                    }
+                    return {
+                        results: RocketChat.models.Rooms.findByName(regex).fetch(),
+                        total: RocketChat.models.Rooms.findByName(regex).count(),
+                    };
+                }
+
+                // type === users
+                if (!RocketChat.authz.hasPermission(user._id, 'view-outside-room') || !RocketChat.authz.hasPermission(user._id, 'view-d-room')) {
+                    return;
+                }
+                const sort = sortUsers(sortBy, sortDirection);
+                return {
+                    results: RocketChat.models.Users.findByActiveUsersExcept(text, [user.username], {
+                        ...options,
+                        sort,
+                        fields: {
+                            username: 1,
+                            name: 1,
+                            createdAt: 1,
+                            emails: 1,
+                        },
+                    }).fetch(),
+                    total: RocketChat.models.Users.findByActiveUsersExcept(text, [user.username]).count(),
+                };
+		//if not superManager
+            }else{
+
+                siteId = UserInfo.site_id;
+
+                if (type === 'channels') {
+
+                    const sort = sortChannels(sortBy, sortDirection);
+                    if (!RocketChat.authz.hasPermission(user._id, 'view-c-room')) {
+                        return;
+                    }
+                    return {
+                        results: RocketChat.models.Rooms.findByNameAndTypeAndSiteId(siteId, regex),
+                        total: RocketChat.models.Rooms.findByNameAndTypeAndSiteId(siteId, regex).length,
+                    };
+                }
+
+                // type === users
+                if (!RocketChat.authz.hasPermission(user._id, 'view-outside-room') || !RocketChat.authz.hasPermission(user._id, 'view-d-room')) {
+                    return;
+                }
+                const sort = sortUsers(sortBy, sortDirection);
+                return {
+                    results: RocketChat.models.Users.findByActiveUsersExceptAndSiteId(siteId, text, [user.username], {
+                        ...options,
+                        sort,
+                        fields: {
+                            username: 1,
+                            name: 1,
+                            createdAt: 1,
+                            emails: 1,
+                        },
+                    }).fetch(),
+                    total: RocketChat.models.Users.findByActiveUsersExceptAndSiteId(siteId, text, [user.username]).count(),
+                };
 			}
 
-			// type === users
-			if (!RocketChat.authz.hasPermission(user._id, 'view-outside-room') || !RocketChat.authz.hasPermission(user._id, 'view-d-room')) {
-				return;
-			}
-			const sort = sortUsers(sortBy, sortDirection);
-			return {
-				results: RocketChat.models.Users.findByActiveUsersExcept(siteId, text, [user.username], {
-					...options,
-					sort,
-					fields: {
-						username: 1,
-						name: 1,
-						createdAt: 1,
-						emails: 1,
-					},
-				}).fetch(),
-				total: RocketChat.models.Users.findByActiveUsersExcept(siteId, text, [user.username]).count(),
-			};
+
 		}
 	},
 });

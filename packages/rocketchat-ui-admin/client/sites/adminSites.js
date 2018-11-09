@@ -3,7 +3,7 @@ import s from 'underscore.string';
 
 import { RocketChatTabBar } from 'meteor/rocketchat:lib';
 import toastr from "toastr";
-var Allsites = new Mongo.Collection('rocketchat_registered_sites');
+// var Allsites = new Mongo.Collection('rocketchat_registered_sites');
 Template.adminSites.helpers({
 	isReady() {
 		const instance = Template.instance();
@@ -64,10 +64,10 @@ Template.adminSites.onCreated(function() {
 	});
 	this.autorun(function() {
 
-		// const filter = instance.filter.get();
-		// const limit = instance.limit.get();
-		Meteor.subscribe('getSites');
-		// instance.ready.set(subscription.ready());
+		const filter = instance.filter.get();
+		const limit = instance.limit.get();
+        const subscription = Meteor.subscribe('sites',filter,limit);
+        instance.ready.set(subscription.ready());
 	});
 	this.sites = function() {
 		// let filter;
@@ -87,7 +87,8 @@ Template.adminSites.onCreated(function() {
 		// 	$in: ['user', 'bot'],
 		// };
 		// const limit = instance.limit && instance.limit.get();
-		return Allsites.find();
+		// return Allsites.find();
+		return RocketChat.models.Sites.find();
 	};
 });
 
@@ -108,6 +109,7 @@ Template.adminSites.events({
 	'keyup #users-filter'(e, t) {
 		e.stopPropagation();
 		e.preventDefault();
+        console.log("e:===",e);
 		t.filter.set(e.currentTarget.value);
 	},
     'click #invite_siteManager'(e, instance) {
@@ -130,8 +132,8 @@ Template.adminSites.events({
                 toastr.success("Successfully e-mail was transformed");
             });
         });
-        // instance.tabBarData.set(Allsites.findOne(this._id));
-        // instance.tabBar.open('edit-site');
+        instance.tabBarData.set(RocketChat.models.Sites.findOne(this._id));
+        instance.tabBar.open('edit-site');
     },
     'click #delete_site'(e, instance) {
         e.preventDefault();
@@ -153,12 +155,10 @@ Template.adminSites.events({
                 toastr.success("Successfully removed");
             });
         });
-        // instance.tabBarData.set(Allsites.findOne(this._id));
-        // instance.tabBar.open('edit-site');
     },
 	'click .siteInfo_td'(e, instance) {
 		e.preventDefault();
-		instance.tabBarData.set(Allsites.findOne(this._id));
+        instance.tabBarData.set(RocketChat.models.Sites.findOne(this._id));
 		instance.tabBar.open('edit-site');
 	},
 	'click .info-tabs button'(e) {

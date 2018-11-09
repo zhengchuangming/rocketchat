@@ -99,12 +99,22 @@ Template.siteEdit.onCreated(function() {
 		// 	return;
 		// }
 		const siteData = this.getSiteData();
-		//
-		Meteor.call('updateSite', siteData, (error) => {
+		//check invite and status
+
+        if(siteData.invite == false && siteData.status == true) {
+            toastr.error(t('Site manager is not invited yet!'));
+            siteData.status = false;
+        }
+
+		Meteor.call('updateSite', siteData, (error,data) => {
 			if (error) {
 				return handleError(error);
 			}
-			toastr.success(t('Site_updated_successfully'));
+			if(data == "exist") {
+                toastr.error(t('Same siteurl is alreay exist!'));
+                return;
+            }else
+				toastr.success(t('Site_updated_successfully'));
 			this.cancel(form, '');
 		});
 	};

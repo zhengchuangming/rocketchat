@@ -4,6 +4,18 @@ import s from 'underscore.string';
 import { RocketChatTabBar } from 'meteor/rocketchat:lib';
 
 Template.adminUsers.helpers({
+	isSuperAdmin(){
+        if(Accounts.user().roles.toString().indexOf('admin') > 0)
+        	return true;
+        else
+        	return false;
+	},
+	isYou(username){
+		if(username == Accounts.user().username)
+        	return true;
+		else
+			return false;
+	},
 	isReady() {
 		const instance = Template.instance();
 		return instance.ready && instance.ready.get();
@@ -83,16 +95,18 @@ Template.adminUsers.onCreated(function() {
 
 		if (filter) {
 			const filterReg = new RegExp(s.escapeRegExp(filter), 'i');
-			query = { $or: [{ username: filterReg }, { name: filterReg }, { 'emails.address': filterReg }] };
+			query = { "site_id": /dy/ };
 		} else {
 			query = {};
 		}
 		query.type = {
 			$in: ['user', 'bot'],
 		};
-
+		//123qwe123qw / when superManager : sort of users in Manage Window
+		console.log("filter:",query);
 		const limit = instance.limit && instance.limit.get();
-		return Meteor.users.find(query, { limit, sort: { username: 1, name: 1 } }).fetch();
+		console.log("Users,",Meteor.users.find(query, { limit, sort: { site_id:1, roles:1, username: 1, name: 1 } }).fetch());
+		return Meteor.users.find(query, { limit, sort: { site_id:1, roles:1, username: 1, name: 1 } }).fetch();
 	};
 });
 

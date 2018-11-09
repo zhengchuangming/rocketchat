@@ -21,19 +21,21 @@ Meteor.methods({
 			throw new Meteor.Error('error-invalid-user', 'Invalid user', { method: 'insertOrUpdateSite' });
 		}
 
+        if(siteData._id != siteData.changed_id && RocketChat.models.Sites.IsExistSite(siteData.changed_id))
+            return "exist";
+
 		return RocketChat.models.Sites.updateOneSite(siteData);
 	},
     validSiteManager(siteManagerKey){
 	    var ret;
         const siteInfo = RocketChat.models.Sites.findOne({'key':siteManagerKey});
-        console.log("siteInfo:",siteInfo);
         console.log("siteInfo_id:",siteInfo._id);
 
         if(siteInfo) {
             const siteManagerInfo = RocketChat.models.Users.find({'site_id':siteInfo._id}).fetch();
             console.log("siteManagerInfo:",siteManagerInfo);
             if (siteManagerInfo.length == 0)
-                ret = {'siteUrl': siteInfo._id};
+                ret = {'siteUrl': siteInfo._id,'email':siteInfo.email};
             else
                 ret = {'result': '0'}; //siteManager is already registered!
         } else
@@ -45,20 +47,31 @@ Meteor.methods({
 		const siteInfo = RocketChat.models.Sites.findOne({'_id':siteUrl});
 
         const smtp = {
-            username: 'kingstar19881213',   // eg: server@gentlenode.com
-            password: '123qwe123qwe',   // eg: 3eeP1gtizk5eziohfervU
-            server:   'em9265.johnsmith',  // eg: mail.gandi.net
-            port: 534
+            username: 'apikey',   // eg: server@gentlenode.com
+            password: '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',   // eg: 3eeP1gtizk5eziohfervU
+            server:   'smtp.sendgrid.net',  // eg: mail.gandi.net
+            port: 465
         }
 
-        process.env.MAIL_URL = 'smtps://' + encodeURIComponent(smtp.username) + ':' + encodeURIComponent(smtp.password) + '@' + encodeURIComponent(smtp.server) + ':' + smtp.port;
-        // process.env.MAIL_URL = "smtp://kingstar19881213:123qwe123@smtp.gmail.com:587/";
+        // process.env.MAIL_URL = 'smtps://' + encodeURIComponent(smtp.username) + ':' + encodeURIComponent(smtp.password) + '@' + encodeURIComponent(smtp.server) + ':' + smtp.port;
+        process.env.MAIL_URL = "smtp://apikey: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@smtp.sendgrid.net:587";
         this.unblock();
-        const toEmailAddress = "johnsmith19890610@outlook.com";
+        const toEmailAddress = siteInfo.email;
         const fromEmailAddress = "kingstar19881213@gmail.com";
-        const subject = "TestMessage";
-        const content = "You are Ok";
-        // Email.send({toEmailAddress,fromEmailAddress,subject,content});
+        const subject = "Welcome to our chatting site";
+        const content = "Your are invited in our chatting site. Please join in out site by clicking here  http://localhost:3000/site-register?key=" + siteInfo.key;
+
+        Email.send({
+            to: toEmailAddress,
+            from: fromEmailAddress,
+            subject: subject,
+            text: content,
+        });
+
+        RocketChat.models.Sites.update(
+            {_id: siteUrl},
+            {$set: {invite : true}},
+        );
         // console.log("unique Key:",Random.id());
 	},
     deleteSite(siteUrl) {

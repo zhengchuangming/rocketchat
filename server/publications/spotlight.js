@@ -63,9 +63,19 @@ Meteor.methods({
 
 		if (RocketChat.authz.hasPermission(userId, 'view-outside-room')) {
 			console.log("123qwe123qwe/User Search by spotlight!==========",userId);
+
 			if (type.users === true && RocketChat.authz.hasPermission(userId, 'view-d-room')) {
-				var siteId = RocketChat.models.Users.findOneById(userId).site_id;
-				result.users = RocketChat.models.Users.findByActiveUsersExcept(siteId,text, usernames, userOptions).fetch();
+
+				const userInfo= RocketChat.models.Users.findOneById(userId);
+
+				if(userInfo.roles.toString().indexOf('admin') > 0){
+
+                    result.users = RocketChat.models.Users.findByActiveUsersExcept(text, usernames, userOptions).fetch();
+				}else{
+                    var siteId = userInfo.site_id;
+
+                    result.users = RocketChat.models.Users.findByActiveUsersExceptAndSiteId(siteId,text, usernames, userOptions).fetch();
+				}
 			}
 
 			if (type.rooms === true && RocketChat.authz.hasPermission(userId, 'view-c-room')) {

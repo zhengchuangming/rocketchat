@@ -1,5 +1,6 @@
 /* globals popover */
 import _ from 'underscore';
+import toastr from "toastr";
 
 const commonHelpers = {
 	title() {
@@ -123,6 +124,11 @@ Template.flexTabBar.events({
 	'click .tab-button'(e, instance) {
 		e.preventDefault();
 		const $flexTab = $('.flex-tab-container .flex-tab');
+
+		//123qwe123qwe / flextab is not displayed when you pressed site_edit button with not selected site!
+		if(!Template.currentData().data && this.template == "siteEdit"){
+            return toastr.error(t('No site is selected!'));
+		}
 
 		if (instance.tabBar.getState() === 'opened' && instance.tabBar.getTemplate() === this.template) {
 			$flexTab.attr('template', '');

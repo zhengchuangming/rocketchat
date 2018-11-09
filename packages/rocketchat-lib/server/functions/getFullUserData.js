@@ -11,6 +11,7 @@ const defaultFields = {
 	type: 1,
 	active: 1,
 	reason: 1,
+	site_id:1,
 };
 
 const fullFields = {
@@ -68,13 +69,13 @@ RocketChat.getFullUserData = function({ userId, filter, limit: l }) {
 	const options = {
 		fields,
 		limit,
-		sort: { username: 1 },
+		sort: { site_id:-1},
 	};
-
 	const UserInfo = RocketChat.models.Users.findOneById(userId);
-	console.log("123qwe123qwe/fullUserData loading,");
-	if(UserInfo.roles.toString() == 'admin'){
 
+	console.log(" 123qwe123qwe / fullUserData loading,");
+	if(UserInfo.roles.toString().indexOf('admin') > 0){
+        console.log(" 123qwe123qwe / fullUserData loading, In Admin");
 		if (!username) {
 			return RocketChat.models.Users.find({}, options);
 		}

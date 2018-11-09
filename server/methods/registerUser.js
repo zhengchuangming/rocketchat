@@ -170,7 +170,7 @@ Meteor.methods({
 
 		return userId;
 	},
-	validUserInSite(formData){s
+	validUserInSite(formData){
 		console.log("SitehostNameOfUser:",formData.site_id);
 		return RocketChat.models.Users.validUserInSite(formData.site_id,formData.emailOrUsername);
 	},

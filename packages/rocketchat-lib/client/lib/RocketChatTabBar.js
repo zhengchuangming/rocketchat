@@ -58,7 +58,6 @@ export class RocketChatTabBar {
 		$('.flex-tab, .contextual-bar').css('width', button.width ? `${ button.width }px` : '');
 		this.template.set(button.template);
 		this.id.set(button.id);
-		console.log("buttonId:",button.id);
 		return button;
 	}
 

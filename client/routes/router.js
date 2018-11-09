@@ -62,7 +62,7 @@ FlowRouter.route('/site-register', {
             }
             if(data.siteUrl){//if site is registed
             	console.log("Ok");
-                BlazeLayout.render('loginLayout', { center: 'siteRegisterForm' ,siteUrl : data.siteUrl});
+                BlazeLayout.render('loginLayout', { center: 'siteRegisterForm' ,siteUrl : data.siteUrl,siteManagerEmail:data.email});
 			}else if(data.result == '0'){//site manager is already registered
                 console.log("site manager is already registered");
 			}else if(data.result == '1'){//site is not registered
