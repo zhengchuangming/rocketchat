@@ -11,6 +11,7 @@ export function generateAppCallback(providerName, appName) {
 export function getPaths(req) {
 	const i = req.url.indexOf('?');
 	let barePath;
+
 	if (i === -1) {
 		barePath = req.url;
 	} else {

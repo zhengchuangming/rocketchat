@@ -40,7 +40,11 @@ Template.userEdit.helpers({
 
 	role() {
 		const roles = Template.instance().roles.get();
-		return RocketChat.models.Roles.find({ _id: { $nin:roles }, scope: 'Users' }, { sort: { description: 1, _id: 1 } });
+        if(Accounts.user().roles.toString().indexOf('admin') > 0)
+            return RocketChat.models.Roles.find({ _id: { $nin:roles }, scope: 'Users' }, { sort: { description: 1, _id: 1 } });
+        else
+            return RocketChat.models.Roles.find({ _id: { $nin:roles }, scope: 'Users',description:{$ne:'Admin'}}, { sort: { description: 1, _id: 1 } });
+
 	},
 
 	userRoles() {

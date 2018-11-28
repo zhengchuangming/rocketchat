@@ -216,29 +216,37 @@ Template.loginForm.events({
 					console.log("loginMethod = 'loginWithCrowd';");
 					loginMethod = 'loginWithCrowd';
 				}
-
-				Meteor.call('validUserInSite', formData,function(error,result){
-					instance.loading.set(false);
-					if (error != null || !result) {
-						toastr.error(t('User_not_found_or_incorrect_password'));
-						return;
-					}else {
-						return Meteor[loginMethod](s.trim(formData.emailOrUsername), formData.pass, function (error) {
-							if (error != null) {
-								if (error.error === 'no-valid-email') {
-									instance.state.set('email-verification');
-								} else if (error.error === 'error-user-is-not-activated') {
-									toastr.error(t('Wait_activation_warning'));
-								} else {
-									toastr.error(t('User_not_found_or_incorrect_password'));
-								}
-								return;
-							}
-							Session.set('forceLogin', false);
-						});
+			//check if site is enable
+                Meteor.call('IsEnableSite',siteUrl ,function(error,result){
+                    instance.loading.set(false);
+                    if (error != null || !result) {
+                        toastr.error(t('This site is disabled!'));
+                        return;
+                    }else{
+					  //check if use is valid in this site
+                        Meteor.call('validUserInSite', formData,function(error,result){
+                            instance.loading.set(false);
+                            if (error != null || !result) {
+                                toastr.error(t('User_not_found_or_incorrect_password'));
+                                return;
+                            }else {
+                                return Meteor[loginMethod](s.trim(formData.emailOrUsername), formData.pass, function (error) {
+                                    if (error != null) {
+                                        if (error.error === 'no-valid-email') {
+                                            instance.state.set('email-verification');
+                                        } else if (error.error === 'error-user-is-not-activated') {
+                                            toastr.error(t('Wait_activation_warning'));
+                                        } else {
+                                            toastr.error(t('User_not_found_or_incorrect_password'));
+                                        }
+                                        return;
+                                    }
+                                    Session.set('forceLogin', false);
+                                });
+                            }
+                        });
 					}
-				});
-
+                });
 			}
 		}
 	},

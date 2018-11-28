@@ -118,7 +118,7 @@ class ModelRooms extends RocketChat.models._Base {
 			if(item._id != "GENERAL") {
 				const subscriptions = RocketChat.models.Subscriptions.findByRoomIdWhenUsernameExists(item._id, {fields: {'u._id': 1}}).fetch();
 
-				if(subscriptions) {
+				if(subscriptions.length > 0 && subscriptions[0].u != 'undefined') {
 
 					userId = subscriptions[0].u._id; // TODO: CACHE: expensive
 					ReadUser = RocketChat.models.Users.findOneById(userId);

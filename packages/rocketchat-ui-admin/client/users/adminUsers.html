@@ -19,6 +19,35 @@
 								   placeholder="{{_ "Search"}}" autofocus dir="auto">
 					 	</div>
 					</form>
+					<div>
+						<div style = "display: inline-block;">
+							<input type="radio" id="All" name="scope" value="All"
+								   checked>
+							<label for="All">All</label>
+						</div>
+
+						<div  style = "display: inline-block;">
+							<input type="radio" id="SiteManager" name="scope" value="SiteManager">
+							<label for="SiteManager">SiteManager</label>
+						</div>
+
+						<div  style = "display: inline-block;">
+							<input type="radio" id="User" name="scope" value="User">
+							<label for="User">User</label>
+						</div>
+
+						<div style = "display: inline-block;margin-left:20px;">
+							{{#let lstSite=enableSites}}
+							<select id="urlSelect" class="rc-input rc-form-item-inline rc-input--small">
+								<option value="placeholder" disabled selected>{{_ "Select_URL"}}</option>
+								<option value="All">AllSites</option>
+								{{#each lstSite}}
+									<option value="{{_id}}">{{_id}}</option>
+								{{/each}}
+							</select>
+							{{/let}}
+						</div>
+					</div>
 					<div class="results">
 						{{{_ "Showing_results" users.length}}}
 					</div>

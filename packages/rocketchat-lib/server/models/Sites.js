@@ -26,6 +26,14 @@ class ModelSites extends RocketChat.models._Base {
 		else
 			return false;
 	}
+	IsEnableSite(url){
+        const query = {'_id':url};
+        const siteInfo = this.findOne(query);
+        if(siteInfo && siteInfo.length != 0 && siteInfo.status == true)
+           	return true;
+		else
+        	return false;
+	}
 	updateOneSite(siteData){
 		if(this.remove(siteData._id)) {
 			const site = {
@@ -38,6 +46,13 @@ class ModelSites extends RocketChat.models._Base {
 
 		}else
 			return false;
+	}
+	enableOneSite(siteUrl){
+        return this.update(
+            {_id: siteUrl},
+            {$set: {status: true, updated: true}},
+            {upsert: false, multi: true}
+        )
 	}
 	insertOneSite(siteData){
 		const query = {

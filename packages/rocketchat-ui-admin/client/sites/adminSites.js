@@ -114,26 +114,28 @@ Template.adminSites.events({
 	},
     'click #invite_siteManager'(e, instance) {
         e.preventDefault();
-        modal.open({
-            title: t('Are_you_sure'),
-            text: t('Are you sure wish to invite siteManager of ' + this._id +'?'),
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#DD6B55',
-            confirmButtonText: t('Yes'),
-            cancelButtonText: t('Cancel'),
-            closeOnConfirm: true,
-            html: false,
-        }, () => {
-            Meteor.call('inviteSiteManager', this._id , (error) => {
-                if (error) {
-                    return toastr.error(t(error.error));
-                }
-                toastr.success("Successfully e-mail was transformed");
+        if(this.invite != true) {
+            modal.open({
+                title: t('Are_you_sure'),
+                text: t('Are you sure wish to invite siteManager of ' + this._id + '?'),
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: t('Yes'),
+                cancelButtonText: t('Cancel'),
+                closeOnConfirm: true,
+                html: false,
+            }, () => {
+                Meteor.call('inviteSiteManager', this._id, (error) => {
+                    if (error) {
+                        return toastr.error(t(error.error));
+                    }
+                    toastr.success("Successfully e-mail was transformed");
+                });
             });
-        });
-        instance.tabBarData.set(RocketChat.models.Sites.findOne(this._id));
-        instance.tabBar.open('edit-site');
+            instance.tabBarData.set(RocketChat.models.Sites.findOne(this._id));
+            instance.tabBar.open('edit-site');
+        }
     },
     'click #delete_site'(e, instance) {
         e.preventDefault();

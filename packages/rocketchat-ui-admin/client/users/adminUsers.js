@@ -45,12 +45,17 @@ Template.adminUsers.helpers({
 			data: Template.instance().tabBarData.get(),
 		};
 	},
+    enableSites() {
+        return Template.instance().enableSites();
+    },
 });
 
 Template.adminUsers.onCreated(function() {
 	const instance = this;
 	this.limit = new ReactiveVar(50);
 	this.filter = new ReactiveVar('');
+	this.filterRole = new ReactiveVar('All');
+    this.filterSites = new ReactiveVar('');
 	this.ready = new ReactiveVar(true);
 	this.tabBar = new RocketChatTabBar();
 	this.tabBar.showGroup(FlowRouter.current().route.name);
@@ -79,33 +84,50 @@ Template.adminUsers.onCreated(function() {
 		template: 'adminUserInfo',
 		order: 3,
 	});
-	this.autorun(function() {
+    this.enableSites = function() {
+        return RocketChat.models.Sites.find();
+    };
+
+    this.autorun(function() {
+        const filterSites = "";
+        const limitSites = 50;
+        const subscriptionSites = Meteor.subscribe('sites',filterSites,limitSites,'true');
+
 		const filter = instance.filter.get();
 		const limit = instance.limit.get();
-		const subscription = instance.subscribe('fullUserData', filter, limit);
+		const subscription = instance.subscribe('fullUserData', '', limit);
 		instance.ready.set(subscription.ready());
 	});
 	this.users = function() {
 		let filter;
-		let query;
-
+		let query = {};
+		let filterRole = instance.filterRole.get();
+        let filterSites = instance.filterSites.get();
 		if (instance.filter && instance.filter.get()) {
 			filter = s.trim(instance.filter.get());
 		}
 
 		if (filter) {
 			const filterReg = new RegExp(s.escapeRegExp(filter), 'i');
-			query = { "site_id": /dy/ };
-		} else {
-			query = {};
+			query = { $or: [{"site_id": filterReg,},
+							{username: filterReg,},], };
 		}
+		if(filterRole =="SiteManager"){
+			query.roles = 'SiteManager';
+		}else if(filterRole =="User"){
+            query.roles = {$ne:['SiteManager']};
+		}
+        if(filterSites != "" && filterSites != "All" ) {
+            query.site_id = filterSites;
+        }
 		query.type = {
 			$in: ['user', 'bot'],
 		};
-		//123qwe123qw / when superManager : sort of users in Manage Window
-		console.log("filter:",query);
+		//123qwe123qw
+		// when superManager : sort of users in Manage Window
+		// console.log("filter:",query);
 		const limit = instance.limit && instance.limit.get();
-		console.log("Users,",Meteor.users.find(query, { limit, sort: { site_id:1, roles:1, username: 1, name: 1 } }).fetch());
+		// console.log("Users,",Meteor.users.find(query, { limit, sort: { site_id:1, roles:1, username: 1, name: 1 } }).fetch());
 		return Meteor.users.find(query, { limit, sort: { site_id:1, roles:1, username: 1, name: 1 } }).fetch();
 	};
 });
@@ -127,8 +149,21 @@ Template.adminUsers.events({
 	'keyup #users-filter'(e, t) {
 		e.stopPropagation();
 		e.preventDefault();
+
 		t.filter.set(e.currentTarget.value);
 	},
+    'change #urlSelect'(event,t){
+        t.filterSites.set($(event.target).val());
+    },
+    'click #All'(e, instance) {
+        instance.filterRole.set("All");
+    },
+    'click #SiteManager'(e, instance) {
+        instance.filterRole.set("SiteManager");
+    },
+    'click #User'(e, instance) {
+        instance.filterRole.set("User");
+    },
 	'click .user-info'(e, instance) {
 		e.preventDefault();
 		instance.tabBarData.set(Meteor.users.findOne(this._id));

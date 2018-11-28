@@ -86,6 +86,7 @@ Meteor.methods({
 		return userId;
 	},
 	registerSiteManager(formData) {
+	//register new siteManager
 		console.log("ResigerSite?serverside");
 		const AllowAnonymousRead = RocketChat.settings.get('Accounts_AllowAnonymousRead');
 		const AllowAnonymousWrite = RocketChat.settings.get('Accounts_AllowAnonymousWrite');
@@ -167,7 +168,9 @@ Meteor.methods({
 		} catch (error) {
 			// throw new Meteor.Error 'error-email-send-failed', 'Error trying to send email: ' + error.message, { method: 'registerUser', message: error.message }
 		}
-
+	//After register new siteManager successfullly, set the site enable!
+        const ret = RocketChat.models.Sites.enableOneSite(formData.site_id);
+		console.log("enableOneSiteResult : ",ret);
 		return userId;
 	},
 	validUserInSite(formData){
@@ -183,4 +186,7 @@ Meteor.methods({
 		// // now you can return the result to client.
 		// return res;
 	},
+    IsEnableSite(Url){
+        return RocketChat.models.Sites.IsEnableSite(Url);
+    },
 });
