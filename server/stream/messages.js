@@ -5,7 +5,6 @@ msgStream.allowWrite('none');
 
 msgStream.allowRead(function(eventName, args) {
 	try {
-		// console.log("msgStream.allowRead(function(eventName, args) {");
 		const room = Meteor.call('canAccessRoom', eventName, this.userId, args);
 
 		if (!room) {
@@ -27,7 +26,6 @@ msgStream.allowRead('__my_messages__', 'all');
 
 msgStream.allowEmit('__my_messages__', function(eventName, msg, options) {
 	try {
-		// console.log("msgStream.allowEmit('__my_messages__', function(eventName, msg, options) {");
 		const room = Meteor.call('canAccessRoom', msg.rid, this.userId);
 
 		if (!room) {
@@ -54,14 +52,10 @@ msgStream.allowEmit('GENERAL', function(eventName, msg, options) {
 		}
 		var ReadUserSiteId = RocketChat.models.Users.findOneById(this.userId).site_id;
 		var WriteUserSiteId = RocketChat.models.Users.findOneById(msg.u._id).site_id;
-		// console.log(WriteUserSiteId);
-		// console.log(ReadUserSiteId);
-		if(ReadUserSiteId != WriteUserSiteId) {
-			// console.log("Dont send Data!!");
-			return false;
 
+		if(ReadUserSiteId != WriteUserSiteId) {
+			return false;
 		}
-		// console.log("123QWE123QWE");
 		// options.roomParticipant = RocketChat.models.Subscriptions.findOneByRoomIdAndUserId(room._id, this.userId, { fields: { _id: 1 } }) != null;
 		// options.roomType = room.t;
 		// options.roomName = room.name;
@@ -93,10 +87,11 @@ Meteor.startup(function() {
 	}
 
 	return RocketChat.models.Messages.on('change', function({ clientAction, id, data/* , oplog*/ }) {
-		// console.log("return RocketChat.models.Messages.on('change', function({ clientAction, id, data/* , oplog*/ }) {");
 		switch (clientAction) {
 			case 'inserted':
 			case 'updated':
+
+			console.log("========= notify (stream emit) when message is changed! ==========");
 
 				const message = data || RocketChat.models.Messages.findOne({ _id: id });
 				publishMessage(clientAction, message);

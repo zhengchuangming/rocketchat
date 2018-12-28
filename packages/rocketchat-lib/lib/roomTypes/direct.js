@@ -37,7 +37,8 @@ export class DirectMessageRoomType extends RoomTypeConfig {
 			t: 'd',
 			name: identifier,
 		};
-
+		// console.log("subscription_in_client:",RocketChat.models.Subscriptions.find().fetch());
+		// console.log("chatRoom_in_client:",ChatRoom.find().fetch());
 		const subscription = RocketChat.models.Subscriptions.findOne(query);
 		if (subscription && subscription.rid) {
 			return ChatRoom.findOne(subscription.rid);

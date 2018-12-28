@@ -118,7 +118,7 @@ RocketChat.roomTypes = new class RocketChatRoomTypes extends RoomTypesCommon {
 		if (!this.roomTypes[roomType]) {
 			return false;
 		}
-
+        // console.log("subData.name:",subData.name);
 		let routeData = {};
 		if (this.roomTypes[roomType] && this.roomTypes[roomType].route && this.roomTypes[roomType].route.link) {
 			routeData = this.roomTypes[roomType].route.link(subData);
@@ -127,7 +127,10 @@ RocketChat.roomTypes = new class RocketChatRoomTypes extends RoomTypesCommon {
 				name: subData.name,
 			};
 		}
-
+        // console.log("route:",this.roomTypes[roomType].route);
+        // console.log("routelink:",this.roomTypes[roomType].route.link);
+		// console.log("route.name:",this.roomTypes[roomType].route.name);
+        // console.log("routeData:",routeData);
 		return FlowRouter.go(this.roomTypes[roomType].route.name, routeData, queryParams);
 	}
 };

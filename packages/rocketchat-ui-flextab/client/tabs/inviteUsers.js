@@ -90,7 +90,6 @@ Template.inviteUsers.events({
 	},
 	'click .js-add'(e, instance) {
 		const users = instance.selectedUsers.get().map(({ username }) => username);
-
 		Meteor.call('addUsersToRoom', {
 			rid: Session.get('openedRoom'),
 			users,

@@ -173,9 +173,22 @@ Meteor.methods({
 		console.log("enableOneSiteResult : ",ret);
 		return userId;
 	},
+
+	saveSiteKeyIntoUser(siteKey){
+
+        //2. siteKey is saved as f_online_siteKey(field name) in rocketchat_subscription collection
+        let currentUser = RocketChat.models.Users.findOne(Meteor.userId());
+        RocketChat.models.Subscriptions.saveSiteKey(currentUser.username,siteKey);
+
+		//1. siteKey is saved in users collection
+		return RocketChat.models.Users.saveSiteKey(Meteor.userId(),siteKey);
+	},
 	validUserInSite(formData){
 		console.log("SitehostNameOfUser:",formData.site_id);
 		return RocketChat.models.Users.validUserInSite(formData.site_id,formData.emailOrUsername);
+	},
+	validChatService(siteUrl,siteKey){
+        return RocketChat.models.Users.validChatService(siteUrl,siteKey);
 	},
 	IsExistSite(Url){
 		// function asyncCall(){

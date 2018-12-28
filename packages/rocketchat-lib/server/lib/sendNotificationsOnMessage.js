@@ -47,6 +47,12 @@ const sendNotification = ({
 		return;
 	}
 
+//=========== prevent notifying in other siteKey when message is changed! ================/123qwe123qwe
+
+// if receiver is not in the same page , return;
+    if(receiver.siteKey != sender.siteKey && !(receiver.roles.includes('admin') || receiver.roles.includes('SiteManager')))
+    	return;
+
 	const roomType = room.t;
 	// If the user doesn't have permission to view direct messages, don't send notification of direct messages.
 	if (roomType === 'd' && !RocketChat.authz.hasPermission(subscription.u._id, 'view-d-room')) {
@@ -169,6 +175,12 @@ function sendAllNotifications(message, room) {
 		return message;
 	}
 
+//========== if owner of this message is manager and manager is joined into other two's direct room, return
+	if(room && message && room.t == 'd'){
+		const bExist = room.usernames.includes(message.u.username);
+		if(!bExist)
+			return message;
+	}
 	const mentionIds = (message.mentions || []).map(({ _id }) => _id);
 	const mentionIdsWithoutGroups = mentionIds.filter((_id) => _id !== 'all' && _id !== 'here');
 	const hasMentionToAll = mentionIds.includes('all');
@@ -230,7 +242,7 @@ function sendAllNotifications(message, room) {
 	// the find bellow is crucial. all subscription records returned will receive at least one kind of notification.
 	// the query is defined by the server's default values and Notifications_Max_Room_Members setting.
 	const subscriptions = RocketChat.models.Subscriptions.findNotificationPreferencesByRoom(query);
-	console.log("sendNotificationsONmessage.js/ubscriptions.forEach((subscription) => sendNotification({");
+console.log("======== send Notification users in the same room  ==============/123qwe123qwe");
 	subscriptions.forEach((subscription) => sendNotification({
 		subscription,
 		sender,

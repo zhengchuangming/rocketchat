@@ -73,33 +73,60 @@ Template.adminRoomInfo.helpers({
 });
 
 Template.adminRoomInfo.events({
-	'click .delete'() {
-		modal.open({
-			title: t('Are_you_sure'),
-			text: t('Delete_Room_Warning'),
-			type: 'warning',
-			showCancelButton: true,
-			confirmButtonColor: '#DD6B55',
-			confirmButtonText: t('Yes_delete_it'),
-			cancelButtonText: t('Cancel'),
-			closeOnConfirm: false,
-			html: false,
-		}, () => {
-			Meteor.call('eraseRoom', this.rid, function(error) {
-				if (error) {
-					handleError(error);
-				} else {
-					modal.open({
-						title: t('Deleted'),
-						text: t('Room_has_been_deleted'),
-						type: 'success',
-						timer: 2000,
-						showConfirmButton: false,
-					});
-				}
-			});
-		});
-	},
+    'click .delete'() {
+        modal.open({
+            title: t('Are_you_sure'),
+            text: t('Delete_Room_Warning'),
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: t('Yes_delete_it'),
+            cancelButtonText: t('Cancel'),
+            closeOnConfirm: false,
+            html: false,
+        }, () => {
+            Meteor.call('eraseRoom', this.rid, function(error) {
+                if (error) {
+                    handleError(error);
+                } else {
+                    modal.open({
+                        title: t('Deleted'),
+                        text: t('Room_has_been_deleted'),
+                        type: 'success',
+                        timer: 2000,
+                        showConfirmButton: false,
+                    });
+                }
+            });
+        });
+    },
+    'click .enterRoom'() {
+        console.log("chatRoomBefore:",ChatRoom.find().fetch());
+
+		let cacheRoom = ChatRoom.find().fetch();
+        let cacheSubscription = RocketChat.models.Subscriptions.find().fetch();
+
+        localStorage.setItem("last_join_roomId", this.rid);
+
+		if(cacheRoom.length > 0){
+            let room_id = cacheRoom[0]._id;
+            console.log("chatRoom exist!!!",room_id);
+            Meteor.call('leaveRoom', room_id, function(err) {
+                // RocketChat.models.Subscriptions.remove({_id:cacheSubscription._id});
+                // ChatRoom.remove({_id:cacheRoom._id});
+                CachedChatRoom.clearCache();
+                CachedChatSubscription.clearCache();
+                RoomManager.closeAllRooms();
+                managerEnterRoom();
+            });
+			// Meteor.call('removeUserFromRoom', {rid:room_id,username:cacheSubscription[0].u.username}, function(err) {
+            //     RocketChat.models.Subscriptions.remove({_id:cacheSubscription._id});
+            //     ChatRoom.remove({_id:cacheRoom._id});
+            //     managerEnterRoom();
+            // });
+		}else
+            managerEnterRoom();
+    },
 	'keydown input[type=text]'(e, t) {
 		if (e.keyCode === 13) {
 			e.preventDefault();
@@ -122,7 +149,34 @@ Template.adminRoomInfo.events({
 		t.saveSetting(this.rid);
 	},
 });
+function managerEnterRoom(){
+    let users = [Accounts.user().username];
+    let room_id = localStorage.getItem("last_join_roomId");
+	// console.log("RoomId_to_open:",room_id);
+    Meteor.call('addUsersToRoom', {
+        rid: room_id,
+        users,
+    }, function(err) {
 
+        if (err) {
+            return toastr.error(err);
+        }
+		//after 0.4 second, open room to synchronize
+        Meteor.setTimeout(function(){
+
+            // console.log("CurrentCacheRoom:",ChatRoom.find().fetch());
+            // console.log("CurrentCacheSubscription:",RocketChat.models.Subscriptions.find().fetch());
+            // console.log("findRoom:",room);
+
+            let subscription = RocketChat.models.Subscriptions.findOne({ rid: room_id});
+            let room = ChatRoom.findOne({_id : room_id});
+
+            openRoom(room.t, subscription.name);
+            room.name = subscription.name;
+            RocketChat.roomTypes.openRouteLink(room.t, room, FlowRouter.current().queryParams);
+        }, 400);
+    });
+}
 Template.adminRoomInfo.onCreated(function() {
 	this.editing = new ReactiveVar;
 	this.validateRoomType = () => {

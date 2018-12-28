@@ -35,12 +35,17 @@ class ModelSites extends RocketChat.models._Base {
         	return false;
 	}
 	updateOneSite(siteData){
+		let siteInfo = this.findOne({'_id':siteData._id});
+		let key = '';
+		if(siteInfo)
+			key = siteInfo.key;
 		if(this.remove(siteData._id)) {
 			const site = {
 				_id: siteData.changed_id,
 				email: siteData.email,
 				status: siteData.status,
 				invite: siteData.invite,
+				key   : key
 			};
 			return this.insert(site);
 

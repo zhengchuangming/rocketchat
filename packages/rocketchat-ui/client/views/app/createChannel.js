@@ -227,6 +227,7 @@ Template.createChannel.events({
 		const extraData = Object.keys(instance.extensions_submits)
 			.reduce((result, key) => ({ ...result, ...instance.extensions_submits[key](instance) }), { broadcast, encrypted });
 
+//   ============= createPrivateGroup ============== / 123qwe123qwe
 		Meteor.call(isPrivate ? 'createPrivateGroup' : 'createChannel', name, instance.selectedUsers.get().map((user) => user.username), readOnly, {}, extraData, function(err, result) {
 			if (err) {
 				if (err.error === 'error-invalid-name') {
@@ -302,6 +303,9 @@ Template.createChannel.onCreated(function() {
 	this.tokensRequired = new ReactiveVar(false);
 	this.checkChannel = _.debounce((name) => {
 		if (validateChannelName(name)) {
+
+// =============== check roonNameExist =============== /123qwe123qwe
+
 			return Meteor.call('roomNameExists', name, (error, result) => {
 				if (error) {
 					return;

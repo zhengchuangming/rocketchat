@@ -342,7 +342,14 @@ this.ChatMessages = class ChatMessages {
 			return done();
 		});
 	}
-
+	reportMessage(message){
+        return Meteor.call('reportMessageToAdmin', { _id: message._id }, function(error) {
+            if (error) {
+                return handleError(error);
+            }
+            toastr.success("Successfully reported");
+        });
+	}
 	deleteMsg(message) {
 		const forceDelete = RocketChat.authz.hasAtLeastOnePermission('force-delete-message', message.rid);
 		const blockDeleteInMinutes = RocketChat.settings.get('Message_AllowDeleting_BlockDeleteInMinutes');

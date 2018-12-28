@@ -66,9 +66,16 @@ Template.membersList.helpers({
 				}
 			}
 
+	//============ online status check (memberList) ================123qwe123qwe
+			let  onlineStatus = '';
+
+			if(user.siteKey == localStorage.getItem("siteKey"))
+                onlineStatus = onlineUsers[user.username] != null ? onlineUsers[user.username].status : 'offline';
+			else
+                onlineStatus = 'offline';
 			return {
 				user,
-				status: (onlineUsers[user.username] != null ? onlineUsers[user.username].status : 'offline'),
+				status: onlineStatus,
 				muted: Array.from(roomMuted).includes(user.username),
 				utcOffset,
 			};

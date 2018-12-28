@@ -41,12 +41,33 @@ Meteor.methods({
 				method: 'createDirectMessage',
 			});
 		}
+		// const rid1 = [me._id, to._id].sort().join('');
 
-		const rid = [me._id, to._id].sort().join('');
+// ======= create direct room ========123qwe123qwe
 
-		const now = new Date();
+	// get user siteKey
+		let userInfo = RocketChat.models.Users.findOne(me._id);
+		let siteKey = userInfo.siteKey;
 
-		// Make sure we have a room
+	//get siteKeyInfo for adding memo of siteKey
+        let siteKeyInfo = RocketChat.models.SiteKeys.findOne({'key':siteKey});
+        if(!siteKeyInfo) {
+            throw new Meteor.Error('siteKey does not exist', 'Not allowed', {
+                method: 'createDirectMessage',
+            });
+        }
+		console.log("direct room is created!:",siteKey);
+		//Make sure we have a room
+		let rid = '';
+        const now = new Date();
+        const existRoom = RocketChat.models.Rooms.findOne({usernames:[me.username, to.username],siteKey:siteKey});
+
+	// ========= if room is exist, return with rid ==========
+		if(existRoom)
+            rid = existRoom._id;
+        else
+        	rid = Random.id();
+
 		RocketChat.models.Rooms.upsert({
 			_id: rid,
 		}, {
@@ -58,10 +79,16 @@ Meteor.methods({
 				msgs: 0,
 				ts: now,
 				usersCount: 2,
+				site_id:siteKeyInfo.site_id,
+				siteKey: siteKey,
+				siteKeyName:siteKeyInfo.memo,
 			},
 		});
 
 		const myNotificationPref = RocketChat.getDefaultSubscriptionPref(me);
+
+	//get siteKey onwhich second user is connected
+        const secondUser = RocketChat.models.Users.findOne({username:to.username});
 
 		// Make user I have a subcription to this room
 		const upsertSubscription = {
@@ -78,6 +105,8 @@ Meteor.methods({
 				userMentions: 0,
 				groupMentions: 0,
 				customFields: me.customFields,
+				siteKey:siteKey,
+				f_online_siteKey:secondUser.siteKey,
 				u: {
 					_id: me._id,
 					username: me.username,
@@ -111,6 +140,8 @@ Meteor.methods({
 				unread: 0,
 				userMentions: 0,
 				groupMentions: 0,
+				siteKey:siteKey,
+				f_online_siteKey:siteKey,
 				customFields: to.customFields,
 				u: {
 					_id: to._id,

@@ -1,5 +1,6 @@
 Meteor.methods({
 	createPrivateGroup(name, members, readOnly = false, customFields = {}, extraData = {}) {
+		console.log("====== createPrivateGroup ============");
 		check(name, String);
 		check(members, Match.Optional([String]));
 

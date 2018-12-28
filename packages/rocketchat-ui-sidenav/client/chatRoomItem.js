@@ -18,7 +18,7 @@ Template.chatRoomItem.helpers({
 		// }
 
 		const active = [this.rid, this._id].includes((id) => id === openedRoom);
-		console.log("ActiveValue:",active);
+		console.log("================ chatRoomItem ====================/123qwe123qwe",active);
 		const archivedClass = this.archived ? 'archived' : false;
 
 		this.alert = !this.hideUnreadStatus && this.alert; // && (!hasFocus || FlowRouter.getParam('_id') !== this.rid);

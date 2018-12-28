@@ -229,14 +229,16 @@ Meteor.methods({
 			let messagesInSite = [];
 			var allMessages = RocketChat.models.Messages.find(query, options).fetch();
 
-			if(rid == "GENERAL") {
-				allMessages.forEach(function (item) {
-					const siteId = RocketChat.models.Users.findOneById(item.u._id).site_id;
-					if(UserSiteId == siteId)
-						messagesInSite.push(item);
-				});
-				result.message.docs = messagesInSite;
-			}else
+		// ======= message Search ======== 123qwe123qwe
+
+			// if(rid == "GENERAL") {
+			// 	allMessages.forEach(function (item) {
+			// 		const siteId = RocketChat.models.Users.findOneById(item.u._id).site_id;
+			// 		if(UserSiteId == siteId)
+			// 			messagesInSite.push(item);
+			// 	});
+			// 	result.message.docs = messagesInSite;
+			// }else
 				result.message.docs = allMessages;
 		}
 

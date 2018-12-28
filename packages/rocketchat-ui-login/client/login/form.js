@@ -96,11 +96,13 @@ Template.loginForm.events({
 			console.log("formData is no!!");
 			return;
 		}
-		if(!instance.ParentSiteUrl){
-			toastr.error(t('Parent address is invalid!'));
-			instance.loading.set(false);
-			return;
-		}
+        // console.log("siteKeyValue:",$('#siteKey').val());
+//******* check if parent site is valid********
+		// if(!instance.ParentSiteUrl){
+		// 	toastr.error(t('Parent address is invalid!'));
+		// 	instance.loading.set(false);
+		// 	return;
+		// }
 		// var formData;
 		const state = instance.state.get();
 
@@ -154,9 +156,7 @@ Template.loginForm.events({
 			}
 			if (state === 'register') {
 				formData.secretURL = FlowRouter.getParam('hash');
-				// toastr.error(t('loginForm is display!!!'));
 				if(Template.IsSite)
-
 						return Meteor.call('registerSite', formData, function(error) {
 						instance.loading.set(false);
 						if (error != null) {
@@ -180,8 +180,16 @@ Template.loginForm.events({
 						});
 					});
 				else{
-
-						return Meteor.call('registerUser', formData, function (error) {
+                    let loginMethod = 'loginWithPassword';
+                    if (RocketChat.settings.get('LDAP_Enable')) {
+                        loginMethod = 'loginWithLDAP';
+                        console.log("loginMethod = 'loginWithLDAP';");
+                    }
+                    if (RocketChat.settings.get('CROWD_Enable')) {
+                        console.log("loginMethod = 'loginWithCrowd';");
+                        loginMethod = 'loginWithCrowd';
+                    }
+					return Meteor.call('registerUser', formData, function (error) {
 							instance.loading.set(false);
 							if (error != null) {
 								if (error.reason === 'Email already exists.') {
@@ -191,22 +199,58 @@ Template.loginForm.events({
 								}
 								return;
 							}
-							RocketChat.callbacks.run('userRegistered');
-							return Meteor.loginWithPassword(s.trim(formData.email), formData.pass, function (error) {
-								if (error && error.error === 'error-invalid-email') {
-									toastr.success(t('We_have_sent_registration_email'));
-									return instance.state.set('login');
-								} else if (error && error.error === 'error-user-is-not-activated') {
-									return instance.state.set('wait-activation');
-								} else {
-									Session.set('forceLogin', false);
-								}
-							});
+							// RocketChat.callbacks.run('userRegistered');
+                            return Meteor[loginMethod](s.trim(formData.email), formData.pass, function (error) {
+                                if (error != null) {
+                                    if (error.error === 'no-valid-email') {
+                                        instance.state.set('email-verification');
+                                    } else if (error.error === 'error-user-is-not-activated') {
+                                        toastr.error(t('Wait_activation_warning'));
+                                    } else {
+                                        toastr.error(t('User_not_found_or_incorrect_password'));
+                                    }
+                                    return;
+                                }
+                                //********** save siteKey into localstorage and User collection  ***********
+                                var currentUrl = window.location.href;
+                                var siteKey='';
+                                if(currentUrl.indexOf("key") > 0) {
+                                    siteKey = currentUrl.substring(currentUrl.indexOf("key") + 4, currentUrl.length);
+                                    localStorage.setItem("siteKey", siteKey);
+                                }else
+                                    siteKey = localStorage.getItem("siteKey");
+
+                                if(siteKey != 'undefined'){
+                                    Meteor.call('saveSiteKeyIntoUser',siteKey,function(error,result){
+                                        //if update is Ok
+                                        if(result > 0){
+                                            console.log("saveResult",result);
+                                        }else {
+                                            toastr.error(t('siteKey save error!'));
+                                        }
+                                    });
+                                }
+
+                                Session.set('forceLogin', false);
+                                FlowRouter.go('home');
+                            });
+
+							// return Meteor.loginWithPassword(s.trim(formData.email), formData.pass, function (error) {
+							// 	if (error && error.error === 'error-invalid-email') {
+							// 		toastr.success(t('We_have_sent_registration_email'));
+							// 		return instance.state.set('login');
+							// 	} else if (error && error.error === 'error-user-is-not-activated') {
+							// 		return instance.state.set('wait-activation');
+							// 	} else {
+							// 		Session.set('forceLogin', false);
+							// 	}
+							// });
 						});
 
 				}
 
 			} else {
+
 				let loginMethod = 'loginWithPassword';
 				if (RocketChat.settings.get('LDAP_Enable')) {
 					loginMethod = 'loginWithLDAP';
@@ -224,12 +268,12 @@ Template.loginForm.events({
                         return;
                     }else{
 					  //check if use is valid in this site
-                        Meteor.call('validUserInSite', formData,function(error,result){
-                            instance.loading.set(false);
-                            if (error != null || !result) {
-                                toastr.error(t('User_not_found_or_incorrect_password'));
-                                return;
-                            }else {
+                      //   Meteor.call('validUserInSite', formData,function(error,result){
+                      //       instance.loading.set(false);
+                      //       if (error != null || !result) {
+                      //           toastr.error(t('User_not_found_or_incorrect_password'));
+                      //           return;
+                      //       }else {
                                 return Meteor[loginMethod](s.trim(formData.emailOrUsername), formData.pass, function (error) {
                                     if (error != null) {
                                         if (error.error === 'no-valid-email') {
@@ -241,10 +285,32 @@ Template.loginForm.events({
                                         }
                                         return;
                                     }
+                                    //********** save siteKey into localstorage and User collection  ***********
+                                    var currentUrl = window.location.href;
+                                    var siteKey='';
+                                    if(currentUrl.indexOf("key") > 0) {
+                                        siteKey = currentUrl.substring(currentUrl.indexOf("key") + 4, currentUrl.length);
+                                        console.log("siteKey:", siteKey);
+                                        localStorage.setItem("siteKey", siteKey);
+                                    }else
+                                    	siteKey = localStorage.getItem("siteKey");
+
+                                    if(siteKey != 'undefined'){
+                                        Meteor.call('saveSiteKeyIntoUser',siteKey,function(error,result){
+                                            //if update is Ok
+                                            if(result > 0){
+                                                console.log("saveResult",result);
+                                            }else {
+                                                toastr.error(t('siteKey save error!'));
+                                            }
+                                        });
+									}
+
                                     Session.set('forceLogin', false);
+                                    FlowRouter.go('home');
                                 });
-                            }
-                        });
+                            // }
+                        // });
 					}
                 });
 			}
@@ -285,6 +351,8 @@ Template.loginForm.events({
 });
 
 Template.loginForm.onCreated(function() {
+	console.log("CurrentUrl:",window.location.href);
+
 	const instance = this;
 	this.customFields = new ReactiveVar;
 	this.loading = new ReactiveVar(false);
@@ -300,7 +368,6 @@ Template.loginForm.onCreated(function() {
 		this.IsDirectOrIframeCall = true;
 		siteUrlTemp = window.location.href;
 	}
-
 	this.ParentSiteUrl = null;
 
 	if(siteUrlTemp)

@@ -23,6 +23,8 @@ Package.onUse(function(api) {
 	api.addFiles('client/lib/ChatPermissions.js', ['client']);
 	api.addFiles('client/lib/models/Roles.js', ['client']);
     api.addFiles('client/lib/models/Sites.js', ['client']);
+    api.addFiles('client/lib/models/SiteKeys.js', ['client']);
+    api.addFiles('client/lib/models/ReportMessages.js', ['client']);
 	api.addFiles('client/lib/models/Users.js', ['client']);
 	api.addFiles('client/lib/models/Subscriptions.js', ['client']);
 
@@ -60,6 +62,8 @@ Package.onUse(function(api) {
 	api.addFiles('server/publications/permissions.js', 'server');
 	api.addFiles('server/publications/roles.js', 'server');
     api.addFiles('server/publications/sites.js', 'server');
+    api.addFiles('server/publications/siteKeys.js', 'server');
+    api.addFiles('server/publications/reportMessages.js', 'server');
 	api.addFiles('server/publications/usersInRole.js', 'server');
 
 	// methods

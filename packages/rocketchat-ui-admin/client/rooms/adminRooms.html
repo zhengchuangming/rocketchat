@@ -29,21 +29,43 @@
 						<table class="secondary-background-color">
 							<thead>
 								<tr class="admin-table-row">
-									<th class="content-background-color border-component-color" width="30%">{{_ "Name"}}</th>
-									<th class="content-background-color border-component-color" width="20%">{{_ "Type"}}</th>
-									<th class="content-background-color border-component-color" width="20%">{{_ "Users"}}</th>
-									<th class="content-background-color border-component-color" width="10%">{{_ "Msgs"}}</th>
-									<th class="content-background-color border-component-color" width="20%">{{_ "Default"}}</th>
+									{{#if isSuperAdmin}}
+										<th class="content-background-color border-component-color" width="15%">{{_ "SiteUrl"}}</th>
+										<th class="content-background-color border-component-color" width="15%">{{_ "ServiceName"}}</th>
+										<th class="content-background-color border-component-color" width="20%">{{_ "Name"}}</th>
+										<th class="content-background-color border-component-color" width="15%">{{_ "Type"}}</th>
+										<th class="content-background-color border-component-color" width="5%">{{_ "Users"}}</th>
+										<th class="content-background-color border-component-color" width="10%">{{_ "Msgs"}}</th>
+										<th class="content-background-color border-component-color" width="20%">{{_ "Default"}}</th>
+									{{else}}
+										<th class="content-background-color border-component-color" width="20%">{{_ "ServiceName"}}</th>
+										<th class="content-background-color border-component-color" width="20%">{{_ "Name"}}</th>
+										<th class="content-background-color border-component-color" width="20%">{{_ "Type"}}</th>
+										<th class="content-background-color border-component-color" width="10%">{{_ "Users"}}</th>
+										<th class="content-background-color border-component-color" width="10%">{{_ "Msgs"}}</th>
+										<th class="content-background-color border-component-color" width="20%">{{_ "Default"}}</th>
+									{{/if}}
 								</tr>
 							</thead>
 							<tbody>
 								{{#each rooms}}
 								<tr class="room-info row-link">
-									<td class="border-component-color">{{name}}</td>
-									<td class="border-component-color">{{type}}</td>
-									<td class="border-component-color">{{usernames.length}}</td>
-									<td class="border-component-color">{{msgs}}</td>
-									<td class="border-component-color">{{default}}</td>
+									{{#if isSuperAdmin}}
+										<td class="border-component-color">{{site_id}}</td>
+										<td class="border-component-color">{{siteKeyName}}</td>
+										<td class="border-component-color">{{name}}</td>
+										<td class="border-component-color">{{type}}</td>
+										<td class="border-component-color">{{usersCount}}</td>
+										<td class="border-component-color">{{msgs}}</td>
+										<td class="border-component-color">{{default}}</td>
+									{{else}}
+										<td class="border-component-color">{{siteKeyName}}</td>
+										<td class="border-component-color">{{name}}</td>
+										<td class="border-component-color">{{type}}</td>
+										<td class="border-component-color">{{usersCount}}</td>
+										<td class="border-component-color">{{msgs}}</td>
+										<td class="border-component-color">{{default}}</td>
+									{{/if}}
 								</tr>
 								{{/each}}
 							</tbody>

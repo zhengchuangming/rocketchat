@@ -1,5 +1,5 @@
 import _ from 'underscore';
-
+// ========= collections in client side /123qwe123qwe=========
 this.ChatMessage = new Mongo.Collection(null);
 this.CachedChatRoom = new RocketChat.CachedCollection({ name: 'rooms' });
 this.ChatRoom = this.CachedChatRoom.collection;

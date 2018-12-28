@@ -33,6 +33,14 @@ class ModelUsers extends RocketChat.models._Base {
 
 		return this.findOne(query, options);
 	}
+	//********** save siteKey into User *******
+    saveSiteKey(userId, siteKey){
+        const query = { _id: userId};
+
+        const update = {$set: {siteKey : siteKey}};
+        return this.update(query, update);
+	}
+
 	validUserInSite(siteId,usernameOrEmail){
 		const query = {
 			username: {
@@ -120,7 +128,7 @@ class ModelUsers extends RocketChat.models._Base {
 		console.log("findByUsernameAndSiteId");
 		return this.find(query, options);
 	}
-	findActiveByUsernameOrNameRegexWithExceptions(siteId,searchTerm, exceptions, options) {
+	findActiveByUsernameOrNameAndSiteIdRegexWithExceptions(siteId,searchTerm, exceptions, options) {
 		if (exceptions == null) { exceptions = []; }
 		if (options == null) { options = {}; }
 		if (!_.isArray(exceptions)) {
@@ -158,7 +166,37 @@ class ModelUsers extends RocketChat.models._Base {
 
 		return this.find(query, options);
 	}
+    findActiveByUsernameOrNameRegexWithExceptions(searchTerm, exceptions, options) {
+        if (exceptions == null) { exceptions = []; }
+        if (options == null) { options = {}; }
+        if (!_.isArray(exceptions)) {
+            exceptions = [exceptions];
+        }
 
+        const termRegex = new RegExp(s.escapeRegExp(searchTerm), 'i');
+        const query = {
+                    $or: [{
+                        username: termRegex,
+                    }, {
+                        name: termRegex,
+                    }],
+                    active: true,
+                    type: {
+                        $in: ['user', 'bot'],
+                    },
+                    $and: [{
+                        username: {
+                            $exists: true,
+                        },
+                    }, {
+                        username: {
+                            $nin: exceptions,
+                        },
+                    }],
+        };
+
+        return this.find(query, options);
+    }
 	findByActiveUsersExcept(searchTerm, exceptions, options) {
 		if (exceptions == null) { exceptions = []; }
 		if (options == null) { options = {}; }
@@ -186,6 +224,7 @@ class ModelUsers extends RocketChat.models._Base {
 		// do not use cache
 		return this._db.find(query, options);
 	}
+
     findByActiveUsersExceptAndSiteId(siteId, searchTerm, exceptions, options) {
         if (exceptions == null) { exceptions = []; }
         if (options == null) { options = {}; }
@@ -213,10 +252,10 @@ class ModelUsers extends RocketChat.models._Base {
                 }
             ],
         };
-        console.log("findByActiveUsersExcept###############################:",siteId);
         // do not use cache
         return this._db.find(query, options);
     }
+
 	findUsersByNameOrUsername(nameOrUsername, options) {
 		const query = {
 			username: {
@@ -334,7 +373,22 @@ class ModelUsers extends RocketChat.models._Base {
 
 		return this.find(query, options);
 	}
+    findUsersWithUsernameByIdsNotOfflineAndSiteKey(siteKey, ids, options) {
+        const query = {
+        	siteKey:siteKey,
+            _id: {
+                $in: ids,
+            },
+            username: {
+                $exists: 1,
+            },
+            status: {
+                $in: ['online', 'away', 'busy'],
+            },
+        };
 
+        return this.find(query, options);
+    }
 	// UPDATE
 	addImportIds(_id, importIds) {
 		importIds = [].concat(importIds);

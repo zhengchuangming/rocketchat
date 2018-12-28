@@ -15,6 +15,7 @@ Meteor.startup(function() {
 		});
 
 		for (const subscription of subscriptions.fetch()) {
+			// console.log("subscription:",subscription);
 			fireGlobalEvent('unread-changed-by-subscription', subscription);
 
 			if (subscription.alert || subscription.unread > 0) {
@@ -29,7 +30,7 @@ Meteor.startup(function() {
 					}, 500);
 				}
 
-				// Increment the total unread count.
+		//============= Increment the total unread count. ================/unread123qwe
 				unreadCount += subscription.unread;
 				if (subscription.alert === true && subscription.unreadAlert !== 'nothing') {
 					const userUnreadAlert = RocketChat.getUserPreference(Meteor.user(), 'unreadAlert');

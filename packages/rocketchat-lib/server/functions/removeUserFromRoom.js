@@ -1,10 +1,15 @@
 RocketChat.removeUserFromRoom = function(rid, user) {
 	const room = RocketChat.models.Rooms.findOneById(rid);
-
 	if (room) {
 		RocketChat.callbacks.run('beforeLeaveRoom', user, room);
 
 		const subscription = RocketChat.models.Subscriptions.findOneByRoomIdAndUserId(rid, user._id, { fields: { _id: 1 } });
+
+        RocketChat.models.Subscriptions.removeByRoomIdAndUserId(rid, user._id);
+
+        if(user.roles.includes('admin') || user.roles.includes('SiteManager')){
+            return true;
+        }
 
 		if (subscription) {
 			const removedUser = user;
@@ -14,8 +19,6 @@ RocketChat.removeUserFromRoom = function(rid, user) {
 		if (room.t === 'l') {
 			RocketChat.models.Messages.createCommandWithRoomIdAndUser('survey', rid, user);
 		}
-
-		RocketChat.models.Subscriptions.removeByRoomIdAndUserId(rid, user._id);
 
 		Meteor.defer(function() {
 			// TODO: CACHE: maybe a queue?

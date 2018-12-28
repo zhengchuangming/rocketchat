@@ -213,6 +213,7 @@ class CachedCollection {
 		Meteor.call(this.methodName, (error, data) => {
 			this.log(`${ data.length } records loaded from server`);
 			data.forEach((record) => {
+				// console.log("loadFromServer(record):",record);
 				RocketChat.callbacks.run(`cachedCollection-loadFromServer-${ this.name }`, record, 'changed');
 				this.collection.upsert({ _id: record._id }, _.omit(record, '_id'));
 
@@ -245,7 +246,6 @@ class CachedCollection {
 		}
 
 		this.log(`syncing from ${ this.updatedAt }`);
-
 		Meteor.call(this.syncMethodName, this.updatedAt, (error, data) => {
 			let changes = [];
 
@@ -275,10 +275,10 @@ class CachedCollection {
 			});
 
 			for (const record of changes) {
+				// console.log("changeRecord:",record);
 				RocketChat.callbacks.run(`cachedCollection-sync-${ this.name }`, record, record._deletedAt ? 'removed' : 'changed');
 				if (record._deletedAt) {
 					this.collection.remove({ _id: record._id });
-
 					this.onSyncData('removed', record);
 
 					if (record._deletedAt && record._deletedAt > this.updatedAt) {
@@ -335,12 +335,19 @@ class CachedCollection {
 	setupListener(eventType, eventName) {
 		RocketChat.Notifications[eventType || this.eventType](eventName || this.eventName, (t, record) => {
 			this.log('record received', t, record);
+
+		//=============== unread notify received in cachedCollection/unread123qwe================
+        //     console.log("notifications/setupListenser:",eventName + ":"+eventType);
+		// 	console.log("setupListener(record):",record);
 			RocketChat.callbacks.run(`cachedCollection-received-${ this.name }`, record, t);
 			if (t === 'removed') {
+				// console.log("removedRecord:",record);
 				this.collection.remove(record._id);
 				RoomManager.close(record.t + record.name);
 			} else {
+				// console.log("insertBeforeCollections:",this.collection.find().fetch());
 				this.collection.upsert({ _id: record._id }, _.omit(record, '_id'));
+                // console.log("insertAfterCollections:",this.collection.find().fetch());
 			}
 
 			this.saveCache();

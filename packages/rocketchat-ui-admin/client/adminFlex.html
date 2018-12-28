@@ -26,6 +26,12 @@
 				{{#if hasPermission 'view-site-administration'}}
 					{{> sidebarItem menuItem "Site Manage" "cube" "admin-sites" "" }}
 				{{/if}}
+				{{#if hasPermission 'view-sitekey-administration'}}
+				{{> sidebarItem menuItem "SiteKey Manage" "key" "admin-siteKeys" "" }}
+				{{/if}}
+				{{#if hasPermission 'view-report-administration'}}
+				{{> sidebarItem menuItem "Report Manage" "warning" "admin-reports" "" }}
+				{{/if}}
 				{{#each adminBoxOptions}}
 					{{#if permissionGranted}}
 						{{> sidebarItem menuItem label icon href "" }}

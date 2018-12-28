@@ -27,6 +27,7 @@ RocketChat.loadMessageHistory = function loadMessageHistory({ userId, rid, end, 
 		limit,
 	};
 	console.log("loadMessageHistory");
+	// ============= load messageHistory ============= 123qwe123qwe
 	if (!RocketChat.settings.get('Message_ShowEditedStatus')) {
 		options.fields = {
 			editedAt: 0,
@@ -39,11 +40,11 @@ RocketChat.loadMessageHistory = function loadMessageHistory({ userId, rid, end, 
 	if (end != null) {
 		records = RocketChat.models.Messages.findVisibleByRoomIdBeforeTimestampNotContainingTypes(rid, end, hideMessagesOfType, options).fetch();
 	} else {
-
-		if(rid == "GENERAL") {
-			var siteId = RocketChat.models.Users.findOneById(userId).site_id;
-			records = RocketChat.models.Messages.findMessageInGeneral(siteId);
-		}else
+//  ============= message separete in general room ======= 123qwe123qwe
+		// if(rid == "GENERAL") {
+		// 	var siteId = RocketChat.models.Users.findOneById(userId).site_id;
+		// 	records = RocketChat.models.Messages.findMessageInGeneral(siteId);
+		// }else
 			records = RocketChat.models.Messages.findVisibleByRoomIdNotContainingTypes(rid, hideMessagesOfType, options).fetch();
 	}
 

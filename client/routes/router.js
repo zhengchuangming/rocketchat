@@ -17,32 +17,57 @@ FlowRouter.subscriptions = function() {
 	});
 };
 
-
 FlowRouter.route('/', {
 	name: 'index',
-	action() {
+	action(params,queryParams) {
+        // let  keys = Object.keys(localStorage);
+	    // let  i = keys.length;
+        // while ( i-- ) {
+        //     console.log("keyName:",keys[i]);
+        //     console.log("item:",localStorage.getItem( keys[i] ));
+        // }
+        // localStorage.removeItem("Meteor.userId");
+        // var result = new Date();
+        // result.setDate(result.getDate() + 10);
+        // // localStorage.setItem("Meteor.userId", "CaCvHgiyjXtGX7SwR");
+        // Object.keys(localStorage).forEach((item) => {
+        //     if (item.indexOf('messagebox_') === 0) {
+        //         localStorage.removeItem(item);
+        //     }
+        // });
+        // sessionStorage.clear();
+ 		// Session.clear();
+        // Meteor.users.remove('CaCvHgiyjXtGX7SwR');
 
-		BlazeLayout.render('main', { modal: RocketChat.Layout.isEmbedded(), center: 'loading' });
-		if (!Meteor.userId()) {
-			return FlowRouter.go('home');
-		}
+//******** putting a siteKey into localstorage  ********
+        BlazeLayout.render('main', { modal: RocketChat.Layout.isEmbedded(), center: 'loading' });
+        Meteor.logout(function() {
+            BlazeLayout.render('loginLayout', { center: 'loginForm'});
+            // BlazeLayout.render('loginLayout', { center: 'loginForm' ,siteKey : queryParams['key']});
+            // FlowRouter.go('/home?key='+queryParams['key']);
+        });
+        return;
 
-		Tracker.autorun(function(c) {
-			if (FlowRouter.subsReady() === true) {
-				Meteor.defer(function() {
-					if (Meteor.user() && Meteor.user().defaultRoom) {
-						const room = Meteor.user().defaultRoom.split('/');
-						FlowRouter.go(room[0], { name: room[1] }, FlowRouter.current().queryParams);
-					} else {
-						FlowRouter.go('home');
-					}
-				});
-				c.stop();
-			}
-		});
+        if (!Meteor.userId()) {
+            return FlowRouter.go('home');
+        }
+
+        Tracker.autorun(function(c) {
+            if (FlowRouter.subsReady() === true) {
+                Meteor.defer(function() {
+                    if (Meteor.user() && Meteor.user().defaultRoom) {
+                        const room = Meteor.user().defaultRoom.split('/');
+                        FlowRouter.go(room[0], { name: room[1] }, FlowRouter.current().queryParams);
+                    } else {
+                        FlowRouter.go('home');
+                    }
+                });
+                c.stop();
+            }
+        });
+
 	},
 });
-
 
 FlowRouter.route('/login', {
 	name: 'login',
@@ -64,9 +89,9 @@ FlowRouter.route('/site-register', {
             	console.log("Ok");
                 BlazeLayout.render('loginLayout', { center: 'siteRegisterForm' ,siteUrl : data.siteUrl,siteManagerEmail:data.email});
 			}else if(data.result == '0'){//site manager is already registered
-                console.log("site manager is already registered");
+                toastr.error(t("site manager is already registered"));
 			}else if(data.result == '1'){//site is not registered
-                console.log("site is not registered");
+                toastr.error(t("site is not registered"));
 			}
         });
 
@@ -80,16 +105,19 @@ FlowRouter.route('/home', {
 		console.log("123qwe123qwe / startPoint!");
 		KonchatNotification.getDesktopPermission();
 		if (queryParams.saml_idp_credentialToken !== undefined) {
+			console.log("permittion here!");
 			Accounts.callLoginMethod({
 				methodArguments: [{
 					saml: true,
 					credentialToken: queryParams.saml_idp_credentialToken,
 				}],
-				userCallback() { BlazeLayout.render('main', { center: 'home' }); FlowRouter.go('/channel/general')}
+                userCallback() { BlazeLayout.render('main', { center: 'home' });}
+				// userCallback() { BlazeLayout.render('main', { center: 'home' }); FlowRouter.go('/channel/general')}
 			});
 		} else {
+            console.log("permittion No!");
 			BlazeLayout.render('main', { center: 'home' });
-			FlowRouter.go('/channel/general');
+			// FlowRouter.go('/channel/general');
 		}
 	},
 });

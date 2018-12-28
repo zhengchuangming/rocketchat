@@ -232,6 +232,28 @@ Meteor.startup(function() {
 		order: 3,
 		group: 'menu',
 	});
+//  ======= add 'ReportMessage' action into popover menu ============= /123qwe123qwe
+    RocketChat.MessageAction.addButton({
+        id: 'report-message',
+        icon: 'reply',
+        label: 'Report',
+        context: ['message', 'message-mobile'],
+        action() {
+            const message = this._arguments[1];
+            chatMessages[Session.get('openedRoom')].reportMessage(message);
+        },
+        condition(message) {
+            if (RocketChat.models.Subscriptions.findOne({ rid: message.rid }) == null) {
+                return false;
+            }
+            if (message.u && message.u._id === Meteor.userId()) {
+                return false;
+            }
+            return true;
+        },
+        order: 3,
+        group: 'menu',
+    });
 
 	RocketChat.MessageAction.addButton({
 		id: 'permalink',
@@ -310,7 +332,6 @@ Meteor.startup(function() {
 		order: 6,
 		group: 'menu',
 	});
-
 
 	RocketChat.MessageAction.addButton({
 		id: 'ignore-user',

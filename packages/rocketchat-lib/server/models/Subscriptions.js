@@ -59,6 +59,20 @@ class ModelSubscriptions extends RocketChat.models._Base {
 
 		return this.find(query, options);
 	}
+    // FIND AND SiteKey
+    findByUserIdAndSiteKey(siteKey, userId, options) {
+        const query =
+            { 'u._id': userId,'siteKey':siteKey };
+
+        return this.find(query, options);
+    }
+	//Fine by UserId and siteKey
+    findByUserIdAndSiteKey(siteKey, userId, options) {
+        const query =
+            { 'u._id': userId, 'siteKey' : siteKey };
+
+        return this.find(query, options);
+    }
 
 	findByUserIdAndType(userId, type, options) {
 		const query = {
@@ -79,7 +93,17 @@ class ModelSubscriptions extends RocketChat.models._Base {
 
 		return this.find(query, options);
 	}
+    findByUserIdAndTypesAndSiteKey(siteKey,userId, types, options) {
+        const query = {
+        	siteKey:siteKey,
+            'u._id': userId,
+            t: {
+                $in: types,
+            },
+        };
 
+        return this.find(query, options);
+    }
 	findByUserIdUpdatedAfter(userId, updatedAt, options) {
 		const query = {
 			'u._id': userId,
@@ -426,7 +450,16 @@ class ModelSubscriptions extends RocketChat.models._Base {
 
 		return this.update(query, update, { multi: true });
 	}
+//********** save siteKey into subscription *******
+    saveSiteKey(username, siteKey){
+        const query = {$or: [
+        			{fname: username,'t':'d'},
+                	{username: username,'t':'p'},
+					]};
 
+        const update = {$set: {f_online_siteKey : siteKey}};
+        return this.update(query, update,{multi:true});
+    }
 	incGroupMentionsAndUnreadForRoomIdExcludingUserId(roomId, userId, incGroup = 1, incUnread = 1) {
 		const query = {
 			rid: roomId,
@@ -768,7 +801,25 @@ class ModelSubscriptions extends RocketChat.models._Base {
 
 		return this.update(query, update, { multi: true });
 	}
+	//when manager is enter to room and then he exist in the room, update 'updatedAt' of subscription to notify the client change of the subscription/123qwe123qwe
+	updatewithRoomAndUser(rid,userId){
+        let query = {
+            'rid': rid,
+            'u._id':userId,
+        };
+        console.log("query1:",query);
+        const update = {
+            $set: {
+                _updatedAt:new Date(),
+            },
+        };
+        this.update(query, update);
 
+        query = {_id:rid};
+        console.log("query2:",query);
+        console.log("update",update);
+        return RocketChat.models.Rooms.update(query, update);
+	}
 	// INSERT
 	createWithRoomAndUser(room, user, extraData) {
 		const subscription = {
@@ -781,6 +832,8 @@ class ModelSubscriptions extends RocketChat.models._Base {
 			rid: room._id,
 			name: room.name,
 			fname: room.fname,
+			siteKey:room.siteKey,
+			f_online_siteKey:room.siteKey,
 			customFields: room.customFields,
 			t: room.t,
 			u: {

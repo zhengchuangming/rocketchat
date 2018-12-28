@@ -4,6 +4,9 @@ import s from 'underscore.string';
 import { RocketChatTabBar } from 'meteor/rocketchat:lib';
 
 Template.adminUsers.helpers({
+	getUsersCount(){
+        return Template.instance().users().length - 1;
+	},
 	isSuperAdmin(){
         if(Accounts.user().roles.toString().indexOf('admin') > 0)
         	return true;

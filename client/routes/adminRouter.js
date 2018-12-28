@@ -10,6 +10,18 @@ FlowRouter.route('/admin/sites', {
 		BlazeLayout.render('main', { center: 'adminSites' });
 	},
 });
+FlowRouter.route('/admin/siteKeys', {
+    name: 'admin-siteKeys',
+    action() {
+        BlazeLayout.render('main', { center: 'adminSiteKeys' });
+    },
+});
+FlowRouter.route('/admin/reports', {
+    name: 'admin-reports',
+    action() {
+        BlazeLayout.render('main', { center: 'adminReports' });
+    },
+});
 FlowRouter.route('/admin/rooms', {
 	name: 'admin-rooms',
 	action() {

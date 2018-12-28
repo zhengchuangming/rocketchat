@@ -26,7 +26,7 @@ Meteor.methods({
 				throw new Meteor.Error('error-invalid-password', 'Invalid password', { method: 'deleteUserOwnAccount' });
 			}
 		} else if (user.username !== s.trim(password)) {
-			throw new Meteor.Error('error-invalid-username', 'Invalid username', { method: 'deleteUserOwnAccount' });
+			// throw new Meteor.Error('error-invalid-username', 'Invalid username', { method: 'deleteUserOwnAccount' });
 		}
 
 		Meteor.defer(function() {

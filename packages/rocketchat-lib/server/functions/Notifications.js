@@ -26,13 +26,13 @@ RocketChat.Notifications = new class {
 			}
 			return false;
 		});
-		console.log("NOtification contruct");
+		// console.log("NOtification contruct");
 		this.streamUser.allowWrite('logged');
 		this.streamAll.allowRead('all');
 		this.streamLogged.allowRead('logged');
 		this.streamRoom.allowRead(function(eventName, extraData) {
 
-			console.log("allowRead");
+			// console.log("allowRead");
 			const [roomId] = eventName.split('/');
 			const room = RocketChat.models.Rooms.findOneById(roomId);
 			if (!room) {
@@ -52,7 +52,7 @@ RocketChat.Notifications = new class {
 			try {
 				console.log("123qwe123qwe/StreamRoom is emitting (allowEmit)/someone is typing!",eventName);
 				const [roomId] = eventName.split('/');
-				if(roomId == "GENERAL"){
+				/*if(roomId == "GENERAL"){
 
 					var ReadUserSiteId = RocketChat.models.Users.findOneById(this.userId).site_id;
 					var WriteUserSiteId = RocketChat.models.Users.findOneByUsername(username).site_id;
@@ -60,7 +60,7 @@ RocketChat.Notifications = new class {
 					if(ReadUserSiteId != WriteUserSiteId) {
 						return false;
 					}
-				}
+				}*/
 
 				return true;
 			} catch (error) {
@@ -71,7 +71,8 @@ RocketChat.Notifications = new class {
 		});
 		this.streamRoomUsers.allowRead('none');
 		this.streamUser.allowRead(function(eventName) {
-			const [userId] = eventName.split('/');
+
+            const [userId] = eventName.split('/');
 			return (this.userId != null) && this.userId === userId;
 		});
 	}
@@ -138,7 +139,9 @@ RocketChat.Notifications = new class {
 	}
 
 	notifyUserInThisInstance(userId, eventName, ...args) {
-		console.log("notifyUserInThisInstance:",userId);
+
+		console.log("=============== notifyUserInThisInstance ===============",userId);
+
 		if (this.debug === true) {
 			console.log('notifyUserAndBroadcast', [userId, eventName, ...args]);
 		}

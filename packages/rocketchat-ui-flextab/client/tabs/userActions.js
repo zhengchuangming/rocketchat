@@ -374,19 +374,20 @@ export const getActions = function({ user, directActions, hideAdminControls }) {
 				const rid = Session.get('openedRoom');
 				const room = ChatRoom.findOne(rid);
 				if (!RocketChat.authz.hasAllPermission('remove-user', rid)) {
-					return toastr.error(TAPi18n.__('error-not-allowed'));
+					return toastr.error('error-not-allowed');
 				}
 				modal.open({
 					title: t('Are_you_sure'),
-					text: t('The_user_will_be_removed_from_s', room.name),
+					text: t('The_user_will_be_removed_from ') + room.name,
 					type: 'warning',
 					showCancelButton: true,
 					confirmButtonColor: '#DD6B55',
-					confirmButtonText: t('Yes_remove_user'),
+					confirmButtonText: t('Yes'),
 					cancelButtonText: t('Cancel'),
 					closeOnConfirm: false,
 					html: false,
 				}, () => Meteor.call('removeUserFromRoom', { rid, username: user.username }, success(() => {
+					console.log("============remove user from room===========/123qwe123qwe");
 					modal.open({
 						title: t('Removed'),
 						text: t('User_has_been_removed_from_s', room.name),

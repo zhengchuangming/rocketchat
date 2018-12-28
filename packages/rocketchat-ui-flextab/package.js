@@ -24,10 +24,19 @@ Package.onUse(function(api) {
 	api.addFiles('client/tabs/uploadedFilesList.html', 'client');
 	api.addFiles('client/tabs/userEdit.html', 'client');
 	api.addFiles('client/tabs/userInfo.html', 'client');
+
 	api.addFiles('client/tabs/siteEdit.html', 'client');
 	api.addFiles('client/tabs/siteEdit.js', 'client');
 	api.addFiles('client/tabs/siteAdd.html', 'client');
 	api.addFiles('client/tabs/siteAdd.js', 'client');
+
+    api.addFiles('client/tabs/siteKeyEdit.html', 'client');
+    api.addFiles('client/tabs/siteKeyEdit.js', 'client');
+    api.addFiles('client/tabs/siteKeyAdd.html', 'client');
+    api.addFiles('client/tabs/siteKeyAdd.js', 'client');
+
+    api.addFiles('client/tabs/reportInfo.html', 'client');
+    api.addFiles('client/tabs/reportInfo.js', 'client');
 
 	api.addFiles('client/flexTabBar.js', 'client');
 	api.addFiles('client/tabs/inviteUsers.js', 'client');

@@ -72,6 +72,7 @@ RocketChat.processDirectEmail = function(email) {
 		} else if (roomInfo.t === 'p') {
 			prevMessageLink += `/group/${ roomInfo.name }?msg=${ email.headers.mid }) `;
 		}
+		console.log("processDirectEmail!!!",prevMessageLink);
 		// add reply message link
 		message.msg = prevMessageLink + message.msg;
 

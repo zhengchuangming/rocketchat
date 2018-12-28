@@ -216,41 +216,40 @@ class ModelsBaseDb extends EventEmitter {
 	}
 
 	update(query, update, options = {}) {
-		// console.log("123QWE123QWE/UpdateValue: subscription._updatedAt in GENERAL***");
+// console.log("================  UpdateValue: subscription._updatedAt in GENERAL ============== 123QWE123QWE/");
 		this.setUpdatedAt(update, true, query);
 		let ids = [];
 		// console.log("updateq111===========query*********:",query) ;
 		// console.log("update222==========update*******:",update) ;
 
-
-		if(query.rid == "GENERAL" && query['u._id']){
-				var keys = Object.keys(query['u._id']);
-			console.log("update444==========GENERAL PROCESS*******:",this.collectionName) ;
-				if(keys[0] == "$ne"){
-						let records = options.multi ? this.find(query).fetch() : this.findOne(query) || [];
-						if (!Array.isArray(records)) {
-							records = [records];
-						}
-						var WriteUser = RocketChat.models.Users.find({_id:query['u._id']});
-
-						if(WriteUser && records.length > 0) {
-
-							records.forEach(function (record) {
-
-								var ReadUser = RocketChat.models.Users.find({_id: record.u._id});
-
-								if(ReadUser && ReadUser.site_id === WriteUser.site_id)
-									ids.push(ReadUser._id);
-
-							});
-						}
-						query = {
-							_id: {
-								$in: ids,
-							},
-						};
-				}
-		}
+		// if(query.rid == "GENERAL" && query['u._id']){
+		// 		var keys = Object.keys(query['u._id']);
+		// 	console.log("update444==========GENERAL PROCESS*******:",this.collectionName) ;
+		// 		if(keys[0] == "$ne"){
+		// 				let records = options.multi ? this.find(query).fetch() : this.findOne(query) || [];
+		// 				if (!Array.isArray(records)) {
+		// 					records = [records];
+		// 				}
+		// 				var WriteUser = RocketChat.models.Users.find({_id:query['u._id']});
+		//
+		// 				if(WriteUser && records.length > 0) {
+		//
+		// 					records.forEach(function (record) {
+		//
+		// 						var ReadUser = RocketChat.models.Users.find({_id: record.u._id});
+		//
+		// 						if(ReadUser && ReadUser.site_id === WriteUser.site_id)
+		// 							ids.push(ReadUser._id);
+		//
+		// 					});
+		// 				}
+		// 				query = {
+		// 					_id: {
+		// 						$in: ids,
+		// 					},
+		// 				};
+		// 		}
+		// }
 
 		if (!isOplogEnabled && this.listenerCount('change') > 0) {
 			console.log("Here!!!");

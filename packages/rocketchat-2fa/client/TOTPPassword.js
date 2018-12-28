@@ -40,7 +40,8 @@ Meteor.loginWithPasswordAndTOTP = function(selector, password, code, callback) {
 
 const { loginWithPassword } = Meteor;
 
-Meteor.loginWithPassword = function(email, password, cb) {
+Meteor.loginWithPassword = function(email, password, cb) {	console.log("loginWithPassword(email, password, (error) => {ddddddddddddddd");
+
 	loginWithPassword(email, password, (error) => {
 		console.log("loginWithPassword(email, password, (error) => {");
 		if (!error || error.error !== 'totp-required') {

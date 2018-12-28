@@ -30,7 +30,7 @@ export class PrivateRoomType extends RoomTypeConfig {
 			t: 'p',
 			name: identifier,
 		};
-
+		// console.log("privateRoom:",ChatRoom.find().fetch());
 		return ChatRoom.findOne(query);
 	}
 

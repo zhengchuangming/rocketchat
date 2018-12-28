@@ -19,6 +19,7 @@
 								   placeholder="{{_ "Search"}}" autofocus dir="auto">
 					 	</div>
 					</form>
+				{{#if isSuperAdmin}}
 					<div>
 						<div style = "display: inline-block;">
 							<input type="radio" id="All" name="scope" value="All"
@@ -40,7 +41,7 @@
 							{{#let lstSite=enableSites}}
 							<select id="urlSelect" class="rc-input rc-form-item-inline rc-input--small">
 								<option value="placeholder" disabled selected>{{_ "Select_URL"}}</option>
-								<option value="All">AllSites</option>
+								<option value="All">All</option>
 								{{#each lstSite}}
 									<option value="{{_id}}">{{_id}}</option>
 								{{/each}}
@@ -48,8 +49,10 @@
 							{{/let}}
 						</div>
 					</div>
+				{{/if}}
 					<div class="results">
-						{{{_ "Showing_results" users.length}}}
+						<!--except yourself from all users(minus one)-->
+						{{{_ "Showing_results" getUsersCount}}}
 					</div>
 					<div class="list">
 						<table class="secondary-background-color">

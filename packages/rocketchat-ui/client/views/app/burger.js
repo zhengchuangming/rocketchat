@@ -1,5 +1,6 @@
 Template.burger.helpers({
 	unread() {
+		console.log("============= get unread from sesssion /unread123qwe===================");
 		return Session.get('unread');
 	},
 	isMenuOpen() {

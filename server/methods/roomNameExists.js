@@ -7,7 +7,13 @@ Meteor.methods({
 				method: 'roomExists',
 			});
 		}
-		const room = RocketChat.models.Rooms.findOneByName(rid);
+
+		let userInfo = RocketChat.models.Users.findOne({'_id':Meteor.userId()});
+		let siteKey;
+		if(userInfo)
+			siteKey = userInfo.siteKey;
+		console.log("========= Check RoomName Exist =========");
+		const room = RocketChat.models.Rooms.findOneByNameAndSiteKey(rid,siteKey);
 		return !!room;
 	},
 });

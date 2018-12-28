@@ -15,10 +15,6 @@ Template.siteEdit.helpers({
 		return Template.instance().site;
 	},
 
-	requirePasswordChange() {
-		return !Template.instance().user || Template.instance().user.requirePasswordChange;
-	},
-
 	role() {
 		const roles = Template.instance().roles.get();
 		return RocketChat.models.Roles.find({ _id: { $nin:roles }, scope: 'Users' }, { sort: { description: 1, _id: 1 } });
@@ -49,26 +45,6 @@ Template.siteEdit.events({
 		t.roles.set(roles);
 		$(`[title=${ this }]`).remove();
 	},
-
-	'click #randomPassword'(e) {
-		e.stopPropagation();
-		e.preventDefault();
-		e.target.classList.add('loading');
-		$('#password').val('');
-		setTimeout(() => {
-			$('#password').val(Random.id());
-			e.target.classList.remove('loading');
-		}, 1000);
-	},
-
-	'mouseover #password'(e) {
-		e.target.type = 'text';
-	},
-
-	'mouseout #password'(e) {
-		e.target.type = 'password';
-	},
-
 	'click #addRole'(e, instance) {
 		e.stopPropagation();
 		e.preventDefault();

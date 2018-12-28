@@ -10,7 +10,8 @@ function fetchRooms(userId, rooms) {
 		return room;
 	});
 }
-
+//123qwe123qwe
+//Get Users and Rooms by UserId and searchType( for user/channel_popup_menu)
 Meteor.methods({
 	spotlight(text, usernames, type = { users: true, rooms: true }, rid) {
 		const searchForChannels = text[0] === '#';
@@ -61,21 +62,21 @@ Meteor.methods({
 			userOptions.sort.username = 1;
 		}
 
+console.log("=============== User Search by spotlight(User,channel PopupMenu) ==============  123qwe123qwe/UserId:",userId);
+
+        const userInfo= RocketChat.models.Users.findOneById(userId);
 		if (RocketChat.authz.hasPermission(userId, 'view-outside-room')) {
-			console.log("123qwe123qwe/User Search by spotlight!==========",userId);
 
 			if (type.users === true && RocketChat.authz.hasPermission(userId, 'view-d-room')) {
 
-				const userInfo= RocketChat.models.Users.findOneById(userId);
-
-				if(userInfo.roles.toString().indexOf('admin') > 0){
+				// if(userInfo.roles.toString().indexOf('admin') > 0){
 
                     result.users = RocketChat.models.Users.findByActiveUsersExcept(text, usernames, userOptions).fetch();
-				}else{
-                    var siteId = userInfo.site_id;
+				// }else{
+                //     var siteKey = userInfo.siteKey;
 
-                    result.users = RocketChat.models.Users.findByActiveUsersExceptAndSiteId(siteId,text, usernames, userOptions).fetch();
-				}
+                    // result.users = RocketChat.models.Users.findByActiveUsersExceptAndSiteId(siteKey,text, usernames, userOptions).fetch();
+				// }
 			}
 
 			if (type.rooms === true && RocketChat.authz.hasPermission(userId, 'view-c-room')) {
@@ -84,8 +85,12 @@ Meteor.methods({
 					.map((roomType) => roomType[0]);
 
 				const roomIds = RocketChat.models.Subscriptions.findByUserIdAndTypes(userId, searchableRoomTypes, { fields: { rid: 1 } }).fetch().map((s) => s.rid);
-				result.rooms = fetchRooms(userId, RocketChat.models.Rooms.findByNameAndTypesNotInIds(regex, searchableRoomTypes, roomIds, roomOptions).fetch());
+                // if(userInfo.roles.toString().indexOf('admin') > 0)
+				// 	result.rooms = fetchRooms(userId, RocketChat.models.Rooms.findByNameAndTypesNotInIds(regex, searchableRoomTypes, roomIds, roomOptions).fetch());
+				// else
+                    result.rooms = fetchRooms(userId, RocketChat.models.Rooms.findByNameAndTypesNotInIdsAndSiteKey(userInfo.siteKey,regex, searchableRoomTypes, roomIds, roomOptions).fetch());
 			}
+
 		} else if (type.users === true && rid) {
 			const subscriptions = RocketChat.models.Subscriptions.find({
 				rid, 'u.username': {
@@ -98,7 +103,6 @@ Meteor.methods({
 				sort: userOptions.sort,
 			}).fetch();
 		}
-
 		return result;
 	},
 });

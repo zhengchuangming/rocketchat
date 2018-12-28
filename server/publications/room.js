@@ -12,6 +12,8 @@ const fields = {
 	announcement: 1,
 	announcementDetails: 1,
 	muted: 1,
+	siteKey:1,
+	siteKeyName:1,
 	_updatedAt: 1,
 	archived: 1,
 	jitsiTimeout: 1,
@@ -66,14 +68,18 @@ Meteor.methods({
 			fields,
 		};
 
+        console.log("@@@@@@@@@@@@@@@@@ load all rooms of user from server @@@@@@@@@@@@@@@@@/123qwe123qwe");
+        let siteKey = RocketChat.models.Users.findOne(Meteor.userId()).siteKey;
+
 		if (updatedAt instanceof Date) {
 			return {
-				update: RocketChat.models.Rooms.findBySubscriptionUserIdUpdatedAfter(Meteor.userId(), updatedAt, options).fetch(),
+				update: RocketChat.models.Rooms.findBySubscriptionUserIdAndSiteKeyUpdatedAfter(siteKey, Meteor.userId(), updatedAt, options).fetch(),
 				remove: RocketChat.models.Rooms.trashFindDeletedAfter(updatedAt, {}, { fields: { _id: 1, _deletedAt: 1 } }).fetch(),
 			};
 		}
 
-		return RocketChat.models.Rooms.findBySubscriptionUserId(Meteor.userId(), options).fetch();
+		// return RocketChat.models.Rooms.findBySubscriptionUserId(Meteor.userId(), options).fetch();
+        return RocketChat.models.Rooms.findBySubscriptionUserIdAndSiteKey(siteKey, Meteor.userId(), options).fetch();
 	},
 
 	getRoomByTypeAndName(type, name) {
@@ -86,11 +92,13 @@ Meteor.methods({
 		const roomFind = RocketChat.roomTypes.getRoomFind(type);
 
 		let room;
-
+        console.log("&&&&&&&&&&&&&&& getRoomByTypeAndName in server side &&&&&&&&&&&&&&&");
+        let siteKey = RocketChat.models.Users.findOne(Meteor.userId()).siteKey;
 		if (roomFind) {
 			room = roomFind.call(this, name);
 		} else {
-			room = RocketChat.models.Rooms.findByTypeAndName(type, name).fetch();
+			// room = RocketChat.models.Rooms.findByTypeAndName(type, name).fetch();
+            room = RocketChat.models.Rooms.findByTypeAndNameAndSiteKey(siteKey, type, name).fetch();
 		}
 
 		if (!room || room.length === 0) {
@@ -112,7 +120,6 @@ Meteor.methods({
 });
 //123QWE123QWE\Notification Entry
 RocketChat.models.Rooms.on('change', ({ clientAction, id, data }) => {
-	console.log("123QWE123QWE//RoomChange Notification Entry");
 	switch (clientAction) {
 		case 'updated':
 		case 'inserted':
@@ -125,38 +132,48 @@ RocketChat.models.Rooms.on('change', ({ clientAction, id, data }) => {
 			break;
 	}
 	if (data) {
-		if(clientAction == "updated" && id == "GENERAL"){
-			console.log("I inform that General Room is Updated!");
-				if(data.lastMessage) {
-						console.log("data.lastMessage.u._id:",data.lastMessage.u._id);
-
-						var WriteUserSiteId = RocketChat.models.Users.findOneById(data.lastMessage.u._id).site_id;
-
-						RocketChat.models.Subscriptions.findByRoomId(id, {fields: {'u._id': 1}}).forEach(({u}) => {
-
-									// console.log("==========***start===============");
-									// console.log(u._id);
-								var receiveUser = RocketChat.models.Users.findOneById(u._id);
-
-								if (receiveUser) {
-									var ReadUserSiteId = receiveUser.site_id;
-
-									if (ReadUserSiteId === WriteUserSiteId)
-											RocketChat.Notifications.notifyUserInThisInstance(u._id, 'rooms-changed', clientAction, data);
-
-								}
-
-							// console.log("==========***end===============");
-
-						});
+		// if(clientAction == "updated" && id == "GENERAL"){
+		// 	console.log("I inform that General Room is Updated!");
+		// 	// ============== when room is updated, start of all actions ================ 123qw123qwe
+		// 		if(data.lastMessage) {
+		// 				console.log("data.lastMessage.u._id:",data.lastMessage.u._id);
+		//
+		// 				var WriteUserSiteId = RocketChat.models.Users.findOneById(data.lastMessage.u._id).site_id;
+		//
+		// 				RocketChat.models.Subscriptions.findByRoomId(id, {fields: {'u._id': 1}}).forEach(({u}) => {
+		//
+		// 							// console.log("==========***start===============");
+		// 							// console.log(u._id);
+		// 						var receiveUser = RocketChat.models.Users.findOneById(u._id);
+		//
+		// 						if (receiveUser) {
+		// 							var ReadUserSiteId = receiveUser.site_id;
+		//
+		// 							if (ReadUserSiteId === WriteUserSiteId)
+		// 									RocketChat.Notifications.notifyUserInThisInstance(u._id, 'rooms-changed', clientAction, data);
+		//
+		// 						}
+		//
+		// 					// console.log("==========***end===============");
+		//
+		// 				});
+		// 		}
+		// }else{
+        //
+		//=======if lastmessage is written in direct room by manager and manager is not in the room, Don't notify
+				if(data.usernames && data.lastMessage){
+					const bExist = data.usernames.includes(data.lastMessage.u.username);
+					if(!bExist) return;
 				}
-		}else{
-				console.log("I inform that Room is inserted or deleted!");
 
-				RocketChat.models.Subscriptions.findByRoomId(id, {fields: {'u._id': 1}}).forEach(({u}) => {
-					RocketChat.Notifications.notifyUserInThisInstance(u._id, 'rooms-changed', clientAction, data);
+				RocketChat.models.Subscriptions.findByRoomId(id, {fields: {'u._id': 1,'siteKey':1}}).forEach((subscription) => {
+                    		var receiveUser = RocketChat.models.Users.findOneById(subscription.u._id);
+							if (receiveUser.siteKey == subscription.siteKey || receiveUser.roles.includes('admin') || receiveUser.roles.includes('SiteManager')) {
+								console.log("======== notify users when room is changed ========:",receiveUser.username);
+                                RocketChat.Notifications.notifyUserInThisInstance(subscription.u._id, 'rooms-changed', clientAction, data);
+                            }
 				});
-		}
+		// }
 
 	}
 });

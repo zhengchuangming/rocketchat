@@ -12,7 +12,8 @@ Meteor.methods({
 			throw new Meteor.Error('error-invalid-user', 'Invalid user', { method: 'insertOrUpdateSite' });
 		}
         siteData.key = Random.id();
-		return RocketChat.models.Sites.insertOneSite(siteData);
+		RocketChat.models.Sites.insertOneSite(siteData);
+        RocketChat.models.Rooms.createGeneralRoom(siteData._id);
 	},
 	updateSite(siteData) {
 
@@ -59,7 +60,7 @@ Meteor.methods({
         const toEmailAddress = siteInfo.email;
         const fromEmailAddress = "kingstar19881213@gmail.com";
         const subject = "Welcome to our chatting site";
-        const content = "Your are invited in our chatting site. Please join in out site by clicking here  http://localhost:3000/site-register?key=" + siteInfo.key;
+        const content = "Your are invited in our chatting site. Please join in out site by clicking here  http://35.167.1.68:3000/site-register?key=" + siteInfo.key;
 
         Email.send({
             to: toEmailAddress,
@@ -104,4 +105,11 @@ Meteor.methods({
 
         return ret;
     },
+    getSiteUrlByUserId(userId){
+        let userInfo =  RocketChat.models.Users.findOne({'_id':userId});
+        if(userInfo.length > 0)
+            return userInfo.site_id;
+        else
+            return '';
+    }
 });

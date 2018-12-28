@@ -53,7 +53,6 @@ console.log("=========getFromServer = (cb, type) => {");
 			console.log(err);
 			return false;
 		}
-
 		const resultsFromServer = [];
 		const usersLength = results.users.length;
 		const roomsLength = results.rooms.length;

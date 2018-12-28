@@ -35,6 +35,35 @@ class ModelRooms extends RocketChat.models._Base {
 		return this.findOne(query, options);
 	}
 
+    findOneByNameAndsiteId(name, siteId,options) {
+		console.log("siteId:",siteId);
+        const query = { name ,'site_id':siteId};
+
+        return this.findOne(query, options);
+    }
+    findOneByNameAndSiteKey(name, siteKey,options) {
+        const query = { name ,'siteKey':siteKey};
+
+        return this.findOne(query, options);
+    }
+    findOneByNameAndNotIdAndSiteId(name, rid,siteId) {
+        const query = {
+            _id: { $ne: rid },
+			site_id:siteId,
+            name,
+        };
+
+        return this.findOne(query);
+    }
+    findOneByNameAndNotIdAndSiteKey(name, rid,siteKey) {
+        const query = {
+            _id: { $ne: rid },
+            siteKey:siteKey,
+            name,
+        };
+
+        return this.findOne(query);
+    }
 	findOneByNameAndNotId(name, rid) {
 		const query = {
 			_id: { $ne: rid },
@@ -49,7 +78,18 @@ class ModelRooms extends RocketChat.models._Base {
 
 		return this.findOne(query, options);
 	}
+	//get Room by Name and siteId
+    findOneByDisplayNameAndSiteId(fname, site_id, options) {
+        const query = { fname ,"site_id":site_id,};
 
+        return this.findOne(query, options);
+    }
+    //get Room by Name and key
+    findOneByDisplayNameAndSiteKey(fname, siteKey, options) {
+        const query = { fname ,"siteKey":siteKey,};
+
+        return this.findOne(query, options);
+    }
 	findOneByNameAndType(name, type, options) {
 		const query = {
 			name,
@@ -159,7 +199,19 @@ class ModelRooms extends RocketChat.models._Base {
 
 		return this.find(query, options);
 	}
+    findBySubscriptionUserIdAndSiteKey(siteKey,userId, options) {console.log("findBySubscriptionUserIdAndSiteKey");
+        const data = RocketChat.models.Subscriptions.findByUserIdAndSiteKey(siteKey, userId, { fields: { rid: 1 } }).fetch()
+            .map((item) => item.rid);
 
+        const query = {
+        	'siteKey':siteKey,
+            _id: {
+                $in: data,
+            },
+        };
+
+        return this.find(query, options);
+    }
 	findBySubscriptionTypeAndUserId(type, userId, options) {console.log("findBySubscriptionTypeAndUserId");
 		const data = RocketChat.models.Subscriptions.findByUserIdAndType(userId, type, { fields: { rid: 1 } }).fetch()
 			.map((item) => item.rid);
@@ -174,7 +226,7 @@ class ModelRooms extends RocketChat.models._Base {
 		return this.find(query, options);
 	}
 
-	findBySubscriptionUserIdUpdatedAfter(userId, _updatedAt, options) {console.log("findBySubscriptionUserIdUpdatedAfter");
+	findBySubscriptionUserIdUpdatedAfter(userId, _updatedAt, options) {console.log("@@@@@@@@findBySubscriptionUserIdUpdatedAfter######");
 		const ids = RocketChat.models.Subscriptions.findByUserId(userId, { fields: { rid: 1 } }).fetch()
 			.map((item) => item.rid);
 
@@ -189,7 +241,22 @@ class ModelRooms extends RocketChat.models._Base {
 
 		return this.find(query, options);
 	}
+    findBySubscriptionUserIdAndSiteKeyUpdatedAfter(siteKey, userId, _updatedAt, options) {console.log("@@@@@@@@findBySubscriptionUserIdAndSiteKeyUpdatedAfter######");
+        const ids = RocketChat.models.Subscriptions.findByUserIdAndSiteKey(siteKey, userId, { fields: { rid: 1 } }).fetch()
+            .map((item) => item.rid);
 
+        const query = {
+        	siteKey:siteKey,
+            _id: {
+                $in: ids,
+            },
+            _updatedAt: {
+                $gt: _updatedAt,
+            },
+        };
+
+        return this.find(query, options);
+    }
 	findByNameContaining(name, options) {console.log("findByNameContaining");
 		const nameRegex = new RegExp(s.trim(s.escapeRegExp(name)), 'i');
 
@@ -240,6 +307,24 @@ class ModelRooms extends RocketChat.models._Base {
 
         return this.find(query);
 	}
+
+    findByNameAndSiteKey(siteKey,name){
+
+        console.log("name======:",name);
+        const query = {
+        	siteKey:siteKey,
+            $or: [
+                { name: name },
+                {
+                    t: 'd',
+                    usernames: name,
+                },
+            ],
+        };
+
+        return this.find(query);
+    }
+
 	findByNameAndTypeAndSiteId(siteId, name, type, options) {console.log("findByNameAndTypeAndSiteId");
 		const query = {
 			t: type,
@@ -309,7 +394,36 @@ class ModelRooms extends RocketChat.models._Base {
 		// do not use cache
 		return this._db.find(query, options);
 	}
+    findByNameAndTypesNotInIdsAndSiteId(siteId,name, types, ids, options) {console.log("findByNameAndTypesNotInIds");
+        const query = {
+        	site_id:siteId,
+            _id: {
+                $ne: ids,
+            },
+            t: {
+                $in: types,
+            },
+            name,
+        };
 
+        // do not use cache
+        return this._db.find(query, options);
+    }
+    findByNameAndTypesNotInIdsAndSiteKey(siteKey,name, types, ids, options) {console.log("findByNameAndTypesAndSiteKeyNotInIds");
+        const query = {
+            siteKey:siteKey,
+            _id: {
+                $ne: ids,
+            },
+            t: {
+                $in: types,
+            },
+            name,
+        };
+
+        // do not use cache
+        return this._db.find(query, options);
+    }
 	findChannelAndPrivateByNameStarting(name, options) {console.log("findChannelAndPrivateByNameStarting");
 		const nameRegex = new RegExp(`^${ s.trim(s.escapeRegExp(name)) }`, 'i');
 
@@ -352,7 +466,15 @@ class ModelRooms extends RocketChat.models._Base {
 
 		return this.find(query, options);
 	}
+    findByTypeAndNameAndSiteKey(siteKey,type, name, options) {console.log("findByTypeAndNameAndSiteKey");
+        const query = {
+        	siteKey:siteKey,
+            name,
+            t: type,
+        };
 
+        return this.find(query, options);
+    }
 	findByTypeAndNameContaining(type, name, options) {console.log("findByTypeAndNameContaining");
 		const nameRegex = new RegExp(s.trim(s.escapeRegExp(name)), 'i');
 
@@ -826,6 +948,7 @@ class ModelRooms extends RocketChat.models._Base {
 
 	// INSERT
 	createWithTypeNameUserAndUsernames(type, name, fname, user, usernames, extraData) {
+        console.log("****createWithTypeNameUserAndUsernames*****");
 		const room = {
 			name,
 			fname,
@@ -846,6 +969,7 @@ class ModelRooms extends RocketChat.models._Base {
 	}
 
 	createWithIdTypeAndName(_id, type, name, extraData) {
+        console.log("****createWithIdTypeAndName*****");
 		const room = {
 			_id,
 			ts: new Date(),
@@ -861,8 +985,21 @@ class ModelRooms extends RocketChat.models._Base {
 		this.insert(room);
 		return room;
 	}
+	createGeneralRoom(siteId){
 
+        let room = {
+            name: 'general',
+            fname: 'general',
+            t: 'c',
+            msgs: 0,
+            usersCount: 0,
+            site_id:siteId,
+            ts: new Date(),
+        };
+        return this.insert(room);
+	}
 	createWithFullRoomData(room) {
+		console.log("****createWithFullRoomData*****");
 		delete room._id;
 
 		room._id = this.insert(room);

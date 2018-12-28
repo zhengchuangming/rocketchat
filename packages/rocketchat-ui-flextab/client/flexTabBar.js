@@ -129,7 +129,9 @@ Template.flexTabBar.events({
 		if(!Template.currentData().data && this.template == "siteEdit"){
             return toastr.error(t('No site is selected!'));
 		}
-
+        if(!Template.currentData().data && this.template == "siteKeyEdit"){
+            return toastr.error(t('No siteKey is selected!'));
+        }
 		if (instance.tabBar.getState() === 'opened' && instance.tabBar.getTemplate() === this.template) {
 			$flexTab.attr('template', '');
 			return instance.tabBar.close();

@@ -87,6 +87,11 @@ Template.header.helpers({
 	},
 
 	userStatus() {
+	//============= online status check(header) ==============123qwe123qwe
+		let userInfo = ChatSubscription.findOne({ rid: this._id });
+		if(!userInfo || userInfo.f_online_siteKey != localStorage.getItem("siteKey"))
+			return 'offline';
+
 		const roomData = Session.get(`roomData${ this._id }`);
 		return RocketChat.roomTypes.getUserStatus(roomData.t, this._id) || t('offline');
 	},

@@ -25,9 +25,9 @@ Meteor.publish('userAutocomplete', function(selector) {
 	const exceptions = selector.exceptions || [];
 
 	//separate by site_id
-	var siteId = RocketChat.models.Users.findOneById(this.userId).site_id;
-
-	const cursorHandle = RocketChat.models.Users.findActiveByUsernameOrNameRegexWithExceptions(siteId,selector.term, exceptions, options).observeChanges({
+	// var siteId = RocketChat.models.Users.findOneById(this.userId).site_id;
+	console.log("========== add user when channel create ==============");
+	const cursorHandle = RocketChat.models.Users.findActiveByUsernameOrNameRegexWithExceptions(selector.term, exceptions, options).observeChanges({
 		added(_id, record) {
 			return pub.added('autocompleteRecords', _id, record);
 		},

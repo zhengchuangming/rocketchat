@@ -53,7 +53,6 @@ function setLastMessageTs(instance, ts) {
 
 Template.sidebarItem.onCreated(function() {
 	this.user = RocketChat.models.Users.findOne(Meteor.userId(), { fields: { username: 1 } });
-
 	this.lastMessageTs = new ReactiveVar();
 	this.timeAgoInterval;
 
@@ -90,11 +89,12 @@ Template.sidebarItem.onCreated(function() {
 
 Template.sidebarItem.events({
 	'click [data-id], click .sidebar-item__link'() {
-		// console.log("'click [data-id], click .sidebar-item__link'() {");
 		return menu.close();
 	},
 	'mouseenter .sidebar-item__link'(e) {
-		// console.log("'mouseenter .sidebar-item__link'(e) {");
+		// console.log("clicked [data-id,Meteor.userId()!==currentData.lastMessage.u._id]");
+		// this.renderredMessage = currentData.lastMessage.msg === currentData.lastMessage.exe!=='done';
+
 		const element = e.currentTarget;
 		const ellipsedElement = element.querySelector('.sidebar-item__ellipsis');
 		const isTextEllipsed = ellipsedElement.offsetWidth < ellipsedElement.scrollWidth;
@@ -202,6 +202,11 @@ Template.sidebarItemIcon.helpers({
 	},
 	status() {
 		if (this.t === 'd') {
+		//if this.siteKey and this.f_online_siteKey is not undefined and different, this is not online.
+            if(this.siteKey != this.f_online_siteKey){
+                Session.set(`user_${ this.username }_status`,'offline');
+                return 'offline';
+			}
 			return Session.get(`user_${ this.username }_status`) || 'offline';
 		}
 

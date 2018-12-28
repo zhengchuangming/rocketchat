@@ -32,6 +32,7 @@
 				<div class="sidebar-item__message">
 					<div class="sidebar-item__message-top">
 						<div class="sidebar-item__name">
+				<!--=================== online status(view) /123qwe123qwe===================-->
 							{{#unless darken}}
 								{{> sidebarItemIcon}}
 							{{/unless}}
@@ -56,6 +57,7 @@
 								<div class="sidebar-item__last-message">{{{lastMessage}}}</div>
 							{{/if}}
 						{{/if}}
+				<!--=================== unread message mark(unread count) /123qwe123qwe===================-->
 						{{#if unread}}
 							<span class="badge badge--unread">{{#if userMentions}}@ {{/if}}{{unread}}</span>
 						{{/if}}

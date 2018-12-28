@@ -67,6 +67,9 @@ Template.userInfo.helpers({
 
 	userStatus() {
 		const user = Template.instance().user.get();
+	// **************** online status check ( UserInfo ) *****************123qwe123qwe
+        if(user.siteKey != localStorage.getItem("siteKey"))
+            return 'offline';
 		const userStatus = Session.get(`user_${ user.username }_status`);
 		return userStatus;
 	},

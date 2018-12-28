@@ -7,6 +7,12 @@ import { RocketChatTabBar } from 'meteor/rocketchat:lib';
 this.AdminChatRoom = new Mongo.Collection('rocketchat_room');
 
 Template.adminRooms.helpers({
+    isSuperAdmin(){
+        if(Accounts.user().roles.toString().indexOf('admin') > -1)
+            return true;
+        else
+            return false;
+    },
 	isReady() {
 		const instance = Template.instance();
 		return instance.ready && instance.ready.get();

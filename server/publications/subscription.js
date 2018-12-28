@@ -12,6 +12,8 @@ const fields = {
 	alert: 1,
 	roles: 1,
 	unread: 1,
+	siteKey:1,
+	f_online_siteKey:1,
 	userMentions: 1,
 	groupMentions: 1,
 	archived: 1,
@@ -41,10 +43,13 @@ Meteor.methods({
 		}
 
 		this.unblock();
-		console.log("'subscriptions/get'(updatedAt) {");
+	console.log("=============  subscriptions(define fields of subscriptions) ============== /123qwe123qwe");
 		const options = { fields };
+		//loading by Key
+        const userInfo= RocketChat.models.Users.findOneById( Meteor.userId());
 
-		const records = RocketChat.models.Subscriptions.findByUserId(Meteor.userId(), options).fetch();
+        // const records = RocketChat.models.Subscriptions.findByUserId(Meteor.userId(), options).fetch();
+		const records = RocketChat.models.Subscriptions.findByUserIdAndSiteKey(userInfo.siteKey, Meteor.userId(), options).fetch();
 
 		if (updatedAt instanceof Date) {
 			return {
@@ -61,7 +66,6 @@ Meteor.methods({
 				}).fetch(),
 			};
 		}
-
 		return records;
 	},
 });
@@ -78,9 +82,11 @@ RocketChat.models.Subscriptions.on('change', ({ clientAction, id, data }) => {
 			data = RocketChat.models.Subscriptions.trashFindOneById(id, { fields: { u: 1 } });
 			break;
 	}
-	console.log("123QWE123QWE/Scubscriptions is changed###############notify will be done!");
-	// var receiveUser = RocketChat.models.Users.findOneById(data.u._id);
+	var receiveUser = RocketChat.models.Users.findOneById(data.u._id);
 
-		console.log(data.u._id);
-		RocketChat.Notifications.notifyUserInThisInstance(data.u._id, 'subscriptions-changed', clientAction, data);
+	console.log("===============prevent notify when subscription is changed ==================/123qwe123qwe");
+
+	if(receiveUser.siteKey == data.siteKey || receiveUser.roles.includes('admin') || receiveUser.roles.includes('SiteManager')) {
+        RocketChat.Notifications.notifyUserInThisInstance(data.u._id, 'subscriptions-changed', clientAction, data);
+    }
 });
