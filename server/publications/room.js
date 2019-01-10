@@ -159,8 +159,54 @@ RocketChat.models.Rooms.on('change', ({ clientAction, id, data }) => {
 		// 				});
 		// 		}
 		// }else{
-        //
+
+        //============= check KPI status and register count of users and rooms for KPI statistic whenever room is change======================
+				var curDate = new Date();
+				var prevDate = new Date (
+					curDate.getFullYear(),
+					curDate.getMonth(),
+					(curDate.getDate()-1));
+				var kpiResult = RocketChat.models.Kpi.findOne({$and: [
+                        {"regDate": {$gte: prevDate}},
+                        {"regDate": {$lt: curDate}},
+                    ]});
+
+				if(!kpiResult){
+
+					let userCounts = 0,userOnlineCounts = 0,roomCounts = 0,messageCounts = 0;
+                    let site_keys;
+                    let sites = RocketChat.models.Sites.find({'status':true}).fetch();
+
+                    sites.forEach(function (site) {
+                        site_keys = RocketChat.models.SiteKeys.find({'site_id': site._id}, {fields: {'key': 1}}).fetch();
+
+                        site_keys.forEach(function (item) {
+
+                            messageCounts += RocketChat.models.Messages.getMessageCountInSiteKey(item.key);
+
+                        });
+
+                        userOnlineCounts = RocketChat.models.Subscriptions.getOnlineUserCountOfSite(site._id);
+                        userCounts = RocketChat.models.Subscriptions.getUserCountOfSite(site._id);
+                        roomCounts = RocketChat.models.Rooms.find({'site_id': site._id}).count();
+
+                        let kpiData = {
+                            userCount: userCounts,
+							onlineUserCount:userOnlineCounts,
+                            roomCount: roomCounts,
+                            messageCount: messageCounts,
+                            site_id: site._id,
+							regDate:new Date(),
+                        };
+
+                        RocketChat.models.Kpi.insertKpi(kpiData);
+
+                    });
+
+                }
+
 		//=======if lastmessage is written in direct room by manager and manager is not in the room, Don't notify
+
 				if(data.usernames && data.lastMessage){
 					const bExist = data.usernames.includes(data.lastMessage.u.username);
 					if(!bExist) return;

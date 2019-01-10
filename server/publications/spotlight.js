@@ -53,6 +53,7 @@ Meteor.methods({
 				username: 1,
 				name: 1,
 				status: 1,
+				roles:1,
 			},
 			sort: {},
 		};
@@ -66,17 +67,27 @@ console.log("=============== User Search by spotlight(User,channel PopupMenu) ==
 
         const userInfo= RocketChat.models.Users.findOneById(userId);
 		if (RocketChat.authz.hasPermission(userId, 'view-outside-room')) {
-
+			//loading users except for admin and siteManager
 			if (type.users === true && RocketChat.authz.hasPermission(userId, 'view-d-room')) {
 
-				// if(userInfo.roles.toString().indexOf('admin') > 0){
+                let resultUsers = RocketChat.models.Users.findByActiveUsersExcept(text, usernames, userOptions).fetch();
+                let filteredUsers = [];
 
-                    result.users = RocketChat.models.Users.findByActiveUsersExcept(text, usernames, userOptions).fetch();
-				// }else{
-                //     var siteKey = userInfo.siteKey;
-
-                    // result.users = RocketChat.models.Users.findByActiveUsersExceptAndSiteId(siteKey,text, usernames, userOptions).fetch();
-				// }
+                if(userInfo.roles.toString().indexOf('admin') > -1)
+                    filteredUsers = resultUsers;
+				else if(userInfo.roles.toString().indexOf('SiteManager') > -1){
+                    resultUsers.forEach(function (record) {
+                        if(!record.roles.toString().indexOf('admin') > -1)
+                            filteredUsers.push(record);
+                    });
+				}else{
+                    resultUsers.forEach(function (record) {
+                        if(!(record.roles.toString().indexOf('admin') > -1) && !(record.roles.toString().indexOf('SiteManager') > -1))
+                            filteredUsers.push(record);
+                    });
+				}
+                result.users = filteredUsers;
+		//     result.users = RocketChat.models.Users.findByActiveUsersExceptAndSiteId(siteKey,text, usernames, userOptions).fetch();
 			}
 
 			if (type.rooms === true && RocketChat.authz.hasPermission(userId, 'view-c-room')) {

@@ -50,12 +50,12 @@ msgStream.allowEmit('GENERAL', function(eventName, msg, options) {
 		if (!room) {
 			return false;
 		}
-		var ReadUserSiteId = RocketChat.models.Users.findOneById(this.userId).site_id;
-		var WriteUserSiteId = RocketChat.models.Users.findOneById(msg.u._id).site_id;
-
-		if(ReadUserSiteId != WriteUserSiteId) {
-			return false;
-		}
+		// var ReadUserSiteId = RocketChat.models.Users.findOneById(this.userId).site_id;
+		// var WriteUserSiteId = RocketChat.models.Users.findOneById(msg.u._id).site_id;
+		//
+		// if(ReadUserSiteId != WriteUserSiteId) {
+		// 	return false;
+		// }
 		// options.roomParticipant = RocketChat.models.Subscriptions.findOneByRoomIdAndUserId(room._id, this.userId, { fields: { _id: 1 } }) != null;
 		// options.roomType = room.t;
 		// options.roomName = room.name;

@@ -13,6 +13,7 @@ const defaultFields = {
 	reason: 1,
 	site_id:1,
 	siteKey:1,
+    roles: 1,
 };
 
 const fullFields = {
@@ -24,7 +25,6 @@ const fullFields = {
 	services: 1,
 	requirePasswordChange: 1,
 	requirePasswordChangeReason: 1,
-	roles: 1,
 };
 
 let publicCustomFields = {};

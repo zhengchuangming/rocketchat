@@ -107,7 +107,7 @@ Template.adminRoomInfo.events({
         let cacheSubscription = RocketChat.models.Subscriptions.find().fetch();
 
         localStorage.setItem("last_join_roomId", this.rid);
-
+		localStorage.setItem("admin_enter_room","true");
 		if(cacheRoom.length > 0){
             let room_id = cacheRoom[0]._id;
             console.log("chatRoom exist!!!",room_id);
@@ -152,6 +152,7 @@ Template.adminRoomInfo.events({
 function managerEnterRoom(){
     let users = [Accounts.user().username];
     let room_id = localStorage.getItem("last_join_roomId");
+
 	// console.log("RoomId_to_open:",room_id);
     Meteor.call('addUsersToRoom', {
         rid: room_id,
@@ -174,6 +175,7 @@ function managerEnterRoom(){
             openRoom(room.t, subscription.name);
             room.name = subscription.name;
             RocketChat.roomTypes.openRouteLink(room.t, room, FlowRouter.current().queryParams);
+
         }, 400);
     });
 }

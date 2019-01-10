@@ -40,7 +40,7 @@ Meteor.publish('adminRooms', function(filter, types, limit) {
 	console.log("123qwe123qwe/publish adminRooms into client");
 	var UserInfo = RocketChat.models.Users.findOneById(this.userId);
 	filter = s.trim(filter);
-	if(UserInfo.roles.toString().indexOf('admin') !== -1){
+	if(UserInfo.roles.toString().indexOf('admin') > -1){
 		if (filter && types.length) {
 			// CACHE: can we stop using publications here?
 			return RocketChat.models.Rooms.findByNameContainingAndTypes(filter, types, options);

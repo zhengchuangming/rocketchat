@@ -14,6 +14,25 @@ Meteor.methods({
 		if (!Meteor.userId()) {
 			throw new Meteor.Error('error-invalid-user', 'Invalid user', { method: 'insertSiteKey' });
 		}
+
+		//=========== create generalRoom with siteKey ==============
+        const now = new Date();
+        let room = Object.assign({
+            name: 'general',
+            fname: 'general',
+            t: 'c',
+            msgs: 0,
+            usersCount: 0,
+            site_id:siteKeyData.site_id,
+            siteKey:siteKeyData.key,
+            siteKeyName:siteKeyData.memo,
+            ts: now,
+        });
+        room = RocketChat.models.Rooms.createWithFullRoomData(room);
+        console.log("++++++++  roomId  +++++++++: ",room._id);
+
+        //========= insert siteKey =============
+
 		return RocketChat.models.SiteKeys.insertOneSiteKey(siteKeyData);
 	},
 	updateSiteKey(siteKeyData) {

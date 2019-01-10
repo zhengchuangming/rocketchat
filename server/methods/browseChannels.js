@@ -110,18 +110,40 @@ Meteor.methods({
                 return;
             }
             const sort = sortUsers(sortBy, sortDirection);
+
+		//========= loading users except for admin and siteManager =========
+
+            let resultUsers = RocketChat.models.Users.findByActiveUsersExcept(text, [user.username], {
+								...options,
+								sort,
+								fields: {
+									username: 1,
+									name: 1,
+									createdAt: 1,
+									emails: 1,
+									roles:1,
+								},
+							}).fetch();
+
+            let filteredUsers = [];
+
+            if(UserInfo.roles.toString().indexOf('admin') > -1)
+                filteredUsers = resultUsers;
+            else if(UserInfo.roles.toString().indexOf('SiteManager') > -1){
+                resultUsers.forEach(function (record) {
+                    if(!record.roles.toString().indexOf('admin') > -1)
+                        filteredUsers.push(record);
+                });
+            }else{
+                resultUsers.forEach(function (record) {
+                    if(!(record.roles.toString().indexOf('admin') > -1) && !(record.roles.toString().indexOf('SiteManager') > -1))
+                        filteredUsers.push(record);
+                });
+            }
+
             return {
-                results: RocketChat.models.Users.findByActiveUsersExcept(text, [user.username], {
-                    ...options,
-                    sort,
-                    fields: {
-                        username: 1,
-                        name: 1,
-                        createdAt: 1,
-                        emails: 1,
-                    },
-                }).fetch(),
-                total: RocketChat.models.Users.findByActiveUsersExcept(text, [user.username]).count(),
+                results: filteredUsers,
+                total: filteredUsers.length,
             };
 
 		//if not superManager(old)

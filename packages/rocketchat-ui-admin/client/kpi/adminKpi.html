@@ -1,0 +1,294 @@
+<template name="adminKpi">
+	<div class="main-content-flex">
+		<section class="page-container page-list flex-tab-main-content">
+			{{> header sectionName="KPI-Status"}}
+			<div style = "display:inline;margin-top:20px;">
+
+				{{#if isSuperAdmin}}
+					<div class="col-lg-4 col-xs-6">
+						<!-- small box -->
+						<div class="small-box bg-aqua">
+							<div class="inner">
+								<h3>{{getUserCount}}({{getUserOnlineCount}})</h3>
+								<p>ユーザ数</p>
+							</div>
+							<div class="icon">
+								<i class="ion ion-stats-bars"></i>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-xs-6">
+						<!-- small box -->
+						<div class="small-box bg-red">
+							<div class="inner">
+								<h3>{{getRoomCount}}</h3>
+								<p>ルーム数</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-xs-6">
+						<!-- small box -->
+						<div class="small-box bg-yellow">
+							<div class="inner">
+								<h3>{{getMessageCount}}</h3>
+								<p>メッセージ数</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-xs-6">
+						<!-- small box -->
+						<div class="small-box bg-yellow">
+							<div class="inner">
+								<h3>{{getSiteKeyCount}}</h3>
+								<p>チャット数</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-xs-6">
+						<!-- small box -->
+						<div class="small-box bg-aqua">
+							<div class="inner">
+								<h3>{{getSiteCount}}</h3>
+								<p>サイト数</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-xs-6">
+						<!-- small box -->
+						<div class="small-box bg-red">
+							<div class="inner">
+								<h3>{{getBanCount}}</h3>
+								<p>拒絶する数</p>
+							</div>
+						</div>
+					</div>
+				{{else}}
+					<div class="col-lg-4 col-xs-4">
+						<!-- small box -->
+						<div class="small-box bg-aqua">
+							<div class="inner">
+								<h3>{{getUserCount}}({{getUserOnlineCount}})</h3>
+								<p>ユーザ数</p>
+							</div>
+							<div class="icon">
+								<i class="ion ion-stats-bars"></i>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-xs-4">
+						<!-- small box -->
+						<div class="small-box bg-yellow">
+							<div class="inner">
+								<h3>{{getRoomCount}}</h3>
+								<p>ルーム数</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-xs-4">
+						<!-- small box -->
+						<div class="small-box bg-red">
+							<div class="inner">
+								<h3>{{getMessageCount}}</h3>
+								<p>メッセージ数</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-xs-4">
+					<div class="small-box bg-yellow">
+						<div class="inner">
+							<h3>{{getSiteKeyCount}}</h3>
+							<p>チャット数</p>
+						</div>
+					</div>
+				</div>
+				{{/if}}
+			</div>
+			{{#if isSuperAdmin}}
+				<div>
+					<div id="chartContainerUser" style="height: 370px; margin-left:30px; width: 45%;margin-top:40px;display: inline-block"></div>
+					<div id="chartContainerRoom" style="height: 370px; width: 45%;margin-top:40px;display: inline-block"></div>
+					<div id="chartContainerMessage" style="height: 370px;margin-left:30px; width: 45%;margin-top:40px;display: inline-block"></div>
+				</div>
+			{{else}}
+				<div>
+					<div id="chartUserBySiteKey" style="width: 45%; height: 370px;margin-top:40px;display: inline-block"></div>
+					<div id="chartContainerUser" style="height: 370px; margin-left:30px; width: 45%;margin-top:40px;display: inline-block"></div>
+				</div>
+				<div>
+					<div id="chartContainerRoom" style="height: 370px; width: 45%;margin-top:40px;display: inline-block"></div>
+					<div id="chartContainerMessage" style="height: 370px;margin-left:30px; width: 45%;margin-top:40px;display: inline-block"></div>
+				</div>
+			{{/if}}
+
+			<script>
+
+				function ShowUserCountBySiteKey(userCountData){
+
+                    var kpiObject = jQuery.parseJSON(userCountData);
+                    var userCountDataArray = new Array();
+                    $.each( kpiObject, function(key, obj){
+                        userCountDataArray.push(obj);
+                    });
+                    google.charts.load('current', {'packages':['bar']});
+                    google.charts.setOnLoadCallback(drawChart);
+
+                    function drawChart() {
+                        var data = google.visualization.arrayToDataTable(userCountDataArray);
+
+                        var options = {
+                            chart: {
+                                title: 'サイト別 ユーザ数',
+                                subtitle: 'ユーザ数(オンラインで)',
+                            }
+                        };
+
+                        var chart = new google.charts.Bar(document.getElementById('chartUserBySiteKey'));
+
+                        chart.draw(data, google.charts.Bar.convertOptions(options));
+                    }
+
+                }
+				function ShowKpiTimeline(kpiTimelineData) {
+
+                    var kpiObject = jQuery.parseJSON(kpiTimelineData);
+                    var UserDataArray = new Array();
+                    var OnlineUserDataArray = new Array();
+                    var RoomDataArray = new Array();
+                    var MessageDataArray = new Array();
+                    $.each( kpiObject, function(key, obj){
+
+                        var regDateArray;
+                        if(obj['regDate'])
+                            regDateArray = obj['regDate'].substring(0,10).split("-");
+                        else
+                            regDateArray = obj['_id'].split("-");
+
+						var itemUser = {},itemOnlineUser = {},itemRoom = {},itemMessage = {};
+
+						var regDate = new Date(parseInt(regDateArray[0],10), parseInt(regDateArray[1],10) - 1, parseInt(regDateArray[2],10));
+                        // item['x'] = parseInt(regDateArray[2],10);
+                        // console.log("Date=====:",regDate.toLocaleString('en-us', { month: 'short' }) + " " + regDateArray[2]);
+                        itemUser['x'] = regDate;
+                        itemUser['y'] = obj['userCount'];
+                        UserDataArray.push(itemUser);
+
+                        itemOnlineUser['x'] = regDate;
+                        itemOnlineUser['y'] = obj['onlineUserCount'];
+                        OnlineUserDataArray.push(itemOnlineUser);
+
+                        itemRoom['x'] = regDate;
+                        itemRoom['y'] = obj['roomCount'];
+                        RoomDataArray.push(itemRoom);
+
+                        itemMessage['x'] = regDate;
+                        itemMessage['y'] = obj['messageCount'];
+                        MessageDataArray.push(itemMessage);
+                    });
+
+                    //userCount
+                    var chartUser = new CanvasJS.Chart("chartContainerUser", {
+                        animationEnabled: true,
+                        theme: "light2",
+                        title:{
+                            text: "ユーザ数"
+                        },
+                        axisX:{
+                            valueFormatString: "DD MMM",
+                            crosshair: {
+                                enabled: true,
+                                snapToDataPoint: true
+                            }
+                        },
+                        axisY: {
+                            title: "ユーザ数",
+                            crosshair: {
+                                enabled: true
+                            }
+                        },
+                        toolTip:{
+                            shared:true
+                        },
+                        legend:{
+                            cursor:"pointer",
+                            verticalAlign: "bottom",
+                            horizontalAlign: "left",
+                            dockInsidePlotArea: true,
+                            itemclick: toogleDataSeries
+                        },
+                        data: [{
+                            type: "line",
+                            showInLegend: true,
+                            name: "ユーザ数",
+                            markerType: "square",
+                            xValueFormatString: "DD MMM",
+                            color: "#F08080",
+                            dataPoints: UserDataArray
+                        },
+                            {
+                                type: "line",
+                                showInLegend: true,
+                                name: "オンラインで",
+                                lineDashType: "dash",
+                                dataPoints: OnlineUserDataArray
+                            }]
+                    });
+                    chartUser.render();
+
+                    function toogleDataSeries(e){
+                        if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                            e.dataSeries.visible = false;
+                        } else{
+                            e.dataSeries.visible = true;
+                        }
+                        chartUser.render();
+                    }
+
+                    var chartRoom = new CanvasJS.Chart("chartContainerRoom", {
+                        animationEnabled: true,
+                        title: {
+                            text: "ルーム数 タイムライン"
+                        },
+                        axisY: {
+                            title: "ルーム数",
+                            valueFormatString: "#",
+                            // suffix: "mn",
+                            // prefix: "$"
+                        },
+                        data: [{
+                            type: "splineArea",
+                            color: "rgba(54,158,173,.7)",
+                            markerSize: 5,
+                            xValueFormatString: "DD MMM",
+                            yValueFormatString: "##",
+                            dataPoints: RoomDataArray
+                        }]
+                    });
+                    chartRoom.render();
+
+
+                    var chartMessage = new CanvasJS.Chart("chartContainerMessage", {
+                        animationEnabled: true,
+                        title: {
+                            text: "メッセージ数 タイムライン"
+                        },
+                        axisY: {
+                            title: "メッセージ数",
+                            valueFormatString: "#",
+                            // suffix: "mn",
+                            // prefix: "$"
+                        },
+                        data: [{
+                            type: "splineArea",
+                            color: "rgba(54,158,173,.7)",
+                            markerSize: 5,
+                            xValueFormatString: "DD MMM",
+                            yValueFormatString: "##",
+                            dataPoints: MessageDataArray
+                        }]
+                    });
+                    chartMessage.render();
+                }
+			</script>
+		</section>
+	</div>
+</template>

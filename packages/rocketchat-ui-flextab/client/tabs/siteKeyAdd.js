@@ -70,10 +70,13 @@ Template.siteKeyAdd.onCreated(function() {
         }
 		const siteKeyData = this.getSiteKeyData();
 
-		Meteor.call('insertSiteKey', siteKeyData, (error) => {
-			if (error == "duplicated") {
-				toastr.error(t('duplicated siteKey exist'));
-				return;
+		Meteor.call('insertSiteKey', siteKeyData, (error,data) => {
+			if (error) {
+                return handleError(error);
+			}
+			if(data == "duplicated"){
+                toastr.error(t('duplicated Key or KeyName exist'));
+                return;
 			}
 			toastr.success(t('add siteKey successfully'));
 			this.cancel(form, '');

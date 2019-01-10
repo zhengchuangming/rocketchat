@@ -114,6 +114,30 @@ RocketChat.models.Messages = new class extends RocketChat.models._Base {
 		]);
 
 	}
+
+    getMessageCountInSiteKey(siteKey) {
+        var messages = this._db.model.aggregate([
+            {
+                $lookup:
+                    {
+                        from: "users",
+                        localField: "u._id",
+                        foreignField: "_id",
+                        as: "messages"
+                    }
+            },
+            {
+                $match:{
+                    "messages.siteKey":siteKey
+                }
+            }
+        ]);
+		if(messages)
+			return messages.length;
+		else
+			return 0;
+    }
+
 	findVisibleByRoomIdNotContainingTypes(roomId, types, options) {
 		const query = {
 			_hidden: {

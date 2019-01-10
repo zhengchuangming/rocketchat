@@ -22,16 +22,28 @@ class ModelReportMessages extends RocketChat.models._Base {
 		return this.insert(reportMessage);
 	}
 
-    findFullReportMessages(filter,limit){
+    findFullReportMessages(filter,limit,siteUrl){
 		// console.log("findUllReportMessages!====:",filter);
         const userReg = new RegExp(s.escapeRegExp(filter), 'i');
-        const query = {
-            $or: [{
-                'reportUser.username': userReg,
-            }, {
-                'reportedUser.username': userReg,
-            }],
-        };
+        let query = '';
+        if(siteUrl) {
+            query = {
+                $or: [{
+                    'reportUser.username': userReg,
+                }, {
+                    'reportedUser.username': userReg,
+                }],
+				site_id : siteUrl,
+            };
+        }else{
+            query = {
+                $or: [{
+                    'reportUser.username': userReg,
+                }, {
+                    'reportedUser.username': userReg,
+                }],
+            };
+		}
         // console.log("searchResult:",this.find(query,{limit:limit}).fetch());
 		return this.find(query, {limit:limit});
 	}

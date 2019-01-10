@@ -4,7 +4,7 @@ import s from 'underscore.string';
 import { RocketChatTabBar } from 'meteor/rocketchat:lib';
 import toastr from "toastr";
 // var Allsites = new Mongo.Collection('rocketchat_registered_sites');
-Template.adminReports.helpers({
+Template.adminKpi.helpers({
     isSuperAdmin(){
         if(Accounts.user().roles.toString().indexOf('admin') > -1)
             return true;
@@ -15,8 +15,8 @@ Template.adminReports.helpers({
 		const instance = Template.instance();
 		return instance.ready && instance.ready.get();
 	},
-	Reports() {
-		return Template.instance().Reports();
+	siteKeys() {
+		return Template.instance().siteKeys();
 	},
 	isLoading() {
 		const instance = Template.instance();
@@ -40,66 +40,80 @@ Template.adminReports.helpers({
 			data: Template.instance().tabBarData.get(),
 		};
 	},
+	getUserCount(){
+    	return Template.instance().kpiData.get().userCount;
+	},
+    getUserOnlineCount(){
+        return Template.instance().kpiData.get().userOnlineCount;
+    },
+    getRoomCount(){
+        return Template.instance().kpiData.get().roomCount;
+    },
+    getMessageCount(){
+        return Template.instance().kpiData.get().messageCount;
+    },
+    getSiteCount(){
+        return Template.instance().kpiData.get().siteCount;
+    },
+    getSiteKeyCount(){
+        return Template.instance().kpiData.get().siteKeyCount;
+    },
+    getBanCount(){
+        return Template.instance().kpiData.get().banCount;
+    },
+    getKpiData(){
+        return Template.instance().kpiData.get().kpiTimelineData;
+	}
 });
 
-Template.adminReports.onCreated(function() {
+Template.adminKpi.onCreated(function() {
+
 	const instance = this;
+
 	// Declare a collection to hold the count object.
 
-	this.limit = new ReactiveVar(50);
-	this.filter = new ReactiveVar('');
-	this.ready = new ReactiveVar(true);
-	this.tabBar = new RocketChatTabBar();
-	this.tabBar.showGroup(FlowRouter.current().route.name);
-	this.tabBarData = new ReactiveVar;
-	//
-	RocketChat.TabBar.addButton({
-		groups: ['admin-reports'],
-        id: 'admin-reportInfo',
-        i18nTitle: 'Report_Info',
-        icon: 'user',
-        template: 'reportInfo',
-        order: 3,
+    this.kpiData = new ReactiveVar;
+    return this.autorun(() => {
+        Meteor.call('getKpi', '' , (error,result) => {
+            if (error) {
+                return toastr.error(t(error.error));
+            }
+
+            this.kpiData.set(result);
+
+            window.ShowKpiTimeline(result.kpiTimelineData);
+
+            if(Accounts.user().roles.toString().indexOf('admin') > -1 == false)
+            	window.ShowUserCountBySiteKey(result.userCountBySiteKey);
+
+        });
 	});
-
-	this.autorun(function() {
-
-		const filter = instance.filter.get();
-		const limit = instance.limit.get();
-        const subscription = Meteor.subscribe('reportMessages',filter,limit);
-        const subscriptionUser = instance.subscribe('fullUserData', '', limit);
-        instance.ready.set(subscription.ready());
-	});
-
-	this.Reports = function() {
-		return RocketChat.models.ReportMessages.find();
-	};
 });
 
-Template.adminReports.onRendered(function() {
+Template.adminKpi.onRendered(function() {
 	Tracker.afterFlush(function() {
 		SideNav.setFlex('adminFlex');
 		SideNav.openFlex();
 	});
 });
 
-Template.adminReports.events({
+Template.adminKpi.events({
 	'keydown #users-filter'(e) {
 		if (e.which === 13) {
 			e.stopPropagation();
 			e.preventDefault();
 		}
 	},
-	'keyup #Reports-filter'(e, t) {
+	'keyup #siteKeys-filter'(e, t) {
 		e.stopPropagation();
 		e.preventDefault();
 		t.filter.set(e.currentTarget.value);
 	},
-    'click #delete_reportMessage'(e, instance) {
+    'click #delete_siteKey'(e, instance) {
         e.preventDefault();
         modal.open({
             title: t('Are_you_sure'),
-            text: t('Are you sure wish to remove this reportMessage?'),
+            text: t('Are you sure wish to remove this siteKey?'),
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#DD6B55',
@@ -108,7 +122,7 @@ Template.adminReports.events({
             closeOnConfirm: true,
             html: false,
         }, () => {
-            Meteor.call('deleteReportMessage', this._id , (error) => {
+            Meteor.call('deleteSiteKey', this.key , (error) => {
                 if (error) {
                     return toastr.error(t(error.error));
                 }
@@ -116,10 +130,12 @@ Template.adminReports.events({
             });
         });
     },
-	'click .reportInfo_td'(e, instance) {
+	'click .siteKeyInfo_td'(e, instance) {
 		e.preventDefault();
-        instance.tabBarData.set(RocketChat.models.ReportMessages.findOne(this._id));
-		instance.tabBar.open('admin-reportInfo');
+        if(Accounts.user().roles.toString().indexOf('admin') > -1 != true){
+			instance.tabBarData.set(RocketChat.models.SiteKeys.findOne({'key':this.key}));
+			instance.tabBar.open('edit-siteKey');
+        }
 	},
 	'click .info-tabs button'(e) {
 		e.preventDefault();

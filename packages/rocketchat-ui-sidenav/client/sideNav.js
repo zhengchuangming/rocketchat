@@ -75,7 +75,13 @@ Template.sideNav.onRendered(function() {
 
 Template.sideNav.onCreated(function() {
 	this.groupedByType = new ReactiveVar(false);
-
+    let userRole = Accounts.user().roles.toString();
+    // setting a flexnav as a Manager Style =============/123qwe123qwe
+	if(userRole.indexOf('admin') > -1 || userRole.indexOf('SiteManager') > -1 ) {
+        SideNav.setFlex('adminFlex');
+        SideNav.openFlex();
+        FlowRouter.go('admin-info');
+    }
 	this.autorun(() => {
 		const user = RocketChat.models.Users.findOne(Meteor.userId(), {
 			fields: {

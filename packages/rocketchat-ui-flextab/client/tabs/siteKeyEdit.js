@@ -52,7 +52,10 @@ Template.siteKeyEdit.onCreated(function() {
 			if(data == "-1") {
                 toastr.error(t('Save fail!'));
                 return;
-            }else
+            }else if(data == "duplicated"){
+                toastr.error(t('KeyName duplicated!'));
+                return;
+			}else
 				toastr.success(t('Updated successfully'));
 			this.cancel(form, '');
 		});
@@ -60,6 +63,7 @@ Template.siteKeyEdit.onCreated(function() {
 
 	this.getSiteKeyData = () => {
         const siteKeyData = {'key':s.trim(this.$('#key').val())};
+        siteKeyData.site_id = s.trim(this.$('#site_url').val());
         siteKeyData.memo = s.trim(this.$('#memo').val());
         siteKeyData.status = this.$('#status:checked').length > 0;
         return siteKeyData;

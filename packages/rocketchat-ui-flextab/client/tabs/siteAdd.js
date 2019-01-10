@@ -110,8 +110,11 @@ Template.siteAdd.onCreated(function() {
             return;
 		}
 
-		Meteor.call('insertSite', siteData, (error) => {
-			if (error == "duplicated") {
+		Meteor.call('insertSite', siteData, (error,data) => {
+            if (error) {
+                return handleError(error);
+            }
+			if (data == "duplicated") {
 				toastr.error(t('duplicated url exist'));
 				return;
 			}

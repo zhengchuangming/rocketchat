@@ -18,6 +18,8 @@
 	<link rel="mask-icon" href="assets/safari_pinned.svg" color="#04436a">
 	<link rel="apple-touch-icon" sizes="180x180" href="assets/touchicon_180.png" />
 	<link rel="apple-touch-icon-precomposed" href="assets/touchicon_180_pre.png">
+	<script src="https://canvasjs.com/assets/script/canvasjs.min.js"> </script>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 
 <body class="global-font-family color-primary-font-color">
@@ -52,7 +54,7 @@
 							{{#unless removeSidenav}}
 								{{> sideNav }}
 							{{/unless}}
-							<div class="{{#unless $eq old false}} rc-old {{/unless}} main-content content-background-color {{readReceiptsEnabled}} {{#if modal}}main-modal{{/if}}">
+							<div class="{{#unless $eq old false}} rc-old {{/unless}} main-content content-background-color {{readReceiptsEnabled}} {{#if modal}}main-modal{{/if}}" style = "overflow-x:scroll">
 								{{> Template.dynamic template=center}}
 							</div>
 						</div>

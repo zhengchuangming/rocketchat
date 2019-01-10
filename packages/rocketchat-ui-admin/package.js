@@ -39,6 +39,8 @@ Package.onUse(function(api) {
 	api.addFiles('client/sites/adminSites.js', 'client');
     api.addFiles('client/sitekeys/adminSiteKeys.html', 'client');
     api.addFiles('client/sitekeys/adminSiteKeys.js', 'client');
+    api.addFiles('client/kpi/adminKpi.html', 'client');
+    api.addFiles('client/kpi/adminKpi.js', 'client');
     api.addFiles('client/reports/adminReports.html', 'client');
     api.addFiles('client/reports/adminReports.js', 'client');
 

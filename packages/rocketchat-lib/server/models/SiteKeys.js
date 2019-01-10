@@ -18,10 +18,11 @@ class ModelSiteKeys extends RocketChat.models._Base {
 		else
 			return false;
 	}
-	IsEnableSiteKey(key){
+	IsEnableSiteKey(siteUrl,key){
         const query = {'key':key};
         const siteKeyInfo = this.findOne(query);
-        if(siteKeyInfo && siteKeyInfo.length != 0 && siteKeyInfo.status == true)
+        console.log("siteKeyInfo============:",siteKeyInfo);
+        if(siteKeyInfo && siteKeyInfo.length != 0 && siteKeyInfo.status == true && siteKeyInfo.site_id == siteUrl)
            	return true;
 		else
         	return false;
@@ -29,7 +30,17 @@ class ModelSiteKeys extends RocketChat.models._Base {
 	updateOneSiteKey(siteKeyData){
 		let siteKeyInfo = this.findOne({'key':siteKeyData.key});
 		if(siteKeyInfo) {
-			const query = {'key':siteKeyData.key};
+
+			let query = {
+				site_id:siteKeyData.site_id,
+				memo:siteKeyData.memo,
+			};
+
+            let duplicatedInfo = this.findOne(query);
+			if(duplicatedInfo)
+				return "duplicated";
+
+			query = {'key':siteKeyData.key};
             const update = {
                 $set:{
 					status: siteKeyData.status,
@@ -49,7 +60,12 @@ class ModelSiteKeys extends RocketChat.models._Base {
 	}
 	insertOneSiteKey(siteKeyData){
 		const query = {
-			key: siteKeyData.key,
+            $or: [{
+                key: siteKeyData.key,
+            }, {
+                site_id: siteKeyData.site_id,
+				memo : siteKeyData.memo,
+            }],
 		};
 
 		if(this.findOne(query)) {
@@ -66,15 +82,23 @@ class ModelSiteKeys extends RocketChat.models._Base {
         };
 		return this.remove(query);
     }
-    findFullSiteKeyData(filter,limit,status){
+    findFullSiteKeyData(filter,limit,status,siteUrl){
 
         const siteKeyReg = new RegExp(s.escapeRegExp(filter), 'i');
         var query = "";
-        if(status == 'true')	//gettting if status is true
-            query = {key:siteKeyReg,status:true};
-        else
-            query = {key:siteKeyReg};
-		return this.find(query, {limit:limit});
+        if(siteUrl) {
+            if (status == 'true')	//gettting if status is true
+                query = {key: siteKeyReg, status: true, site_id: siteUrl};
+            else
+                query = {key: siteKeyReg, site_id: siteUrl};
+        }else{
+            if (status == 'true')	//gettting if status is true
+                query = {key: siteKeyReg, status: true};
+            else
+                query = {key: siteKeyReg};
+		}
+
+		return this.find(query, { sort: { default: -1, site_id : 1 } });
 	}
 }
 

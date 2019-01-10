@@ -898,6 +898,107 @@ class ModelSubscriptions extends RocketChat.models._Base {
 
 		return result;
 	}
+	getUserCountOfSite(siteUrl){
+        let usersOfSiteKey = this._db.model.aggregate([
+            {
+                $lookup:
+                    {
+                        from: "rocketchat_sitekeys",
+                        localField: "siteKey",
+                        foreignField: "key",
+                        as: "siteKeys"
+                    }
+            },
+            {
+                $match:{"siteKeys.site_id":siteUrl}
+            },
+            {
+            	$group : {_id:"$u._id"}
+			},
+        ]);
+        if(usersOfSiteKey)
+        	return usersOfSiteKey.length;
+        else
+        	return 0;
+	}
+    getOnlineUserCountOfSite(siteUrl){
+        let usersOfSiteKey = this._db.model.aggregate([
+
+            {
+                $lookup:
+                    {
+                        from: "rocketchat_sitekeys",
+                        localField: "siteKey",
+                        foreignField: "key",
+                        as: "siteKeys"
+                    }
+            },
+            {
+                $lookup:
+                    {
+                        from: "users",
+                        localField: "u._id",
+                        foreignField: "_id",
+                        as: "subscription"
+                    }
+            },
+            {
+                $match:{
+                    "siteKeys.site_id":siteUrl,
+					"subscription.status":'online'
+                }
+            },
+            {
+                $group : {_id:"$u._id"}
+            },
+        ]);
+
+        if(usersOfSiteKey)
+            return usersOfSiteKey.length;
+        else
+            return 0;
+    }
+    getUserCountOfSiteKey(siteKey){
+        let usersOfSiteKey = this._db.model.aggregate([
+            {
+                $match:{"siteKey":siteKey}
+            },
+            {
+                $group : {_id:"$u._id"}
+            },
+        ]);
+        if(usersOfSiteKey)
+            return usersOfSiteKey.length;
+        else
+            return 0;
+    }
+    getOnlineUserCountOfSiteKey(siteKey){
+        let usersOfSiteKey = this._db.model.aggregate([
+            {
+                $lookup:
+                    {
+                        from: "users",
+                        localField: "u._id",
+                        foreignField: "_id",
+                        as: "subscription"
+                    }
+            },
+            {
+                $match:{
+                    "siteKey":siteKey,
+                    "subscription.status":'online'
+                }
+            },
+            {
+                $group : {_id:"$u._id"}
+            },
+        ]);
+
+        if(usersOfSiteKey)
+            return usersOfSiteKey.length;
+        else
+            return 0;
+    }
 }
 
 RocketChat.models.Subscriptions = new ModelSubscriptions('subscription', true);

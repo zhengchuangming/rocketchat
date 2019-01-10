@@ -16,6 +16,12 @@ FlowRouter.route('/admin/siteKeys', {
         BlazeLayout.render('main', { center: 'adminSiteKeys' });
     },
 });
+FlowRouter.route('/admin/kpi', {
+    name: 'admin-kpi',
+    action() {
+        BlazeLayout.render('main', { center: 'adminKpi' });
+    },
+});
 FlowRouter.route('/admin/reports', {
     name: 'admin-reports',
     action() {

@@ -111,13 +111,13 @@ FlowRouter.route('/home', {
 					saml: true,
 					credentialToken: queryParams.saml_idp_credentialToken,
 				}],
-                userCallback() { BlazeLayout.render('main', { center: 'home' });}
-				// userCallback() { BlazeLayout.render('main', { center: 'home' }); FlowRouter.go('/channel/general')}
+                // userCallback() { BlazeLayout.render('main', { center: 'home' });}
+				userCallback() { BlazeLayout.render('main', { center: 'home' }); FlowRouter.go('/channel/general')}
 			});
 		} else {
-            console.log("permittion No!");
-			BlazeLayout.render('main', { center: 'home' });
-			// FlowRouter.go('/channel/general');
+
+			// BlazeLayout.render('main', { center: 'home' });
+			FlowRouter.go('/channel/general');
 		}
 	},
 });

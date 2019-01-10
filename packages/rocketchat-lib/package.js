@@ -133,6 +133,7 @@ Package.onUse(function(api) {
 	api.addFiles('server/models/Users.js', 'server');
 	api.addFiles('server/models/Sites.js', 'server');
     api.addFiles('server/models/SiteKeys.js', 'server');
+    api.addFiles('server/models/Kpi.js', 'server');
     api.addFiles('server/models/ReportMessages.js', 'server');
 	api.addFiles('server/models/ExportOperations.js', 'server');
 	api.addFiles('server/models/UserDataFiles.js', 'server');

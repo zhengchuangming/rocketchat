@@ -142,42 +142,14 @@ class ModelRooms extends RocketChat.models._Base {
 		return this.find(query, options);
 	}
 
-	findByTypesAndSiteId(siteId, types, options) {console.log("findByTypesAndSiteId");
-
-		var query = {
-			t: {
-				$in: types,
-			},
-		};
-		// console.log("123qwe123qwe/ Room separete model");
-		var rooms = this.find(query, options).fetch();
-		var roomIds = [];
-		var ReadUser,userId;
-
-		rooms.forEach(function (item) {
-			if(item._id != "GENERAL") {
-				const subscriptions = RocketChat.models.Subscriptions.findByRoomIdWhenUsernameExists(item._id, {fields: {'u._id': 1}}).fetch();
-
-				if(subscriptions.length > 0 && subscriptions[0].u != 'undefined') {
-
-					userId = subscriptions[0].u._id; // TODO: CACHE: expensive
-					ReadUser = RocketChat.models.Users.findOneById(userId);
-					if (ReadUser && ReadUser.site_id == siteId)
-						roomIds.push(item._id);
-				}
-			}else
-				roomIds.push(item._id);
-		});
-
-		query = {
-			t: {
-				$in: types,
-			},
-			_id:{
-				$in: roomIds,
-			}
-		};
-
+	findByTypesAndSiteId(siteId, types, options) {
+		console.log("***** findRoomByTypesAndSiteId (model)****** ");
+        const query = {
+            t: {
+                $in: types,
+            },
+			site_id:siteId,
+        };
 		return this.find(query, options);
 	}
 

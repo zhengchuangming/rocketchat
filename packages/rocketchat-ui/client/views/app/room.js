@@ -1135,7 +1135,7 @@ Template.room.onRendered(function() {
 	});
 	Tracker.autorun(function() {
 		const room = RocketChat.models.Rooms.findOne({ _id: template.data._id });
-		if (!room) {
+		if (!room && localStorage.getItem("admin_enter_room") != "true") {
 			FlowRouter.go('home');
 		}
 	});

@@ -90,7 +90,7 @@ Template.reportInfo.events({
 
         localStorage.setItem("last_join_roomId", this.room._id);
         localStorage.setItem("reportMessageId", this.reportMessage._id);
-
+        localStorage.setItem("admin_enter_room","true");
         if(cacheRoom.length > 0){
 
             let room_id = cacheRoom[0]._id;

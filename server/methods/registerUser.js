@@ -202,4 +202,7 @@ Meteor.methods({
     IsEnableSite(Url){
         return RocketChat.models.Sites.IsEnableSite(Url);
     },
+    IsEnableSiteKey(Url,siteKey){
+        return RocketChat.models.SiteKeys.IsEnableSiteKey(Url,siteKey);
+    },
 });

@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import s from 'underscore.string';
+import toastr from "toastr";
 
 Template.adminFlex.onCreated(function() {
 	this.settingsFilter = new ReactiveVar('');
@@ -81,4 +82,17 @@ Template.adminFlex.events({
 	'keyup [name=settings-search]'(e, t) {
 		t.settingsFilter.set(e.target.value);
 	},
+	'click #logout'(e, instance) {
+        e.preventDefault();
+        const user = Meteor.user();
+
+        localStorage.removeItem("admin_enter_room");
+
+        Meteor.logout(() => {
+            RocketChat.callbacks.run('afterLogoutCleanUp', user);
+            Meteor.call('logoutCleanUp', user);
+            FlowRouter.go('home');
+            popover.close();
+        });
+    },
 });
