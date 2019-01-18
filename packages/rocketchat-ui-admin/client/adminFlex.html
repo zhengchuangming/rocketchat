@@ -2,12 +2,26 @@
 	<aside class="sidebar-light sidebar--medium" role="navigation">
 		<header class="sidebar-flex__header" style="padding-bottom: 0;padding-top: 13px;background: #e6e5e5;">
 			<div style="display: block;">
-				<div style="margin-bottom: 10px;margin-top:-4px;">
-					<img src="assets/logo" style="width:160px;height:30px;">
-				</div>
-				<div style="position: absolute;margin-top: -35px;margin-left: 105px;">
-					<h1 class="sidebar-flex__title">{{_ "Administration"}}</h1>
-				</div>
+				{{#if isSuperAdmin}}
+					<div style="margin-bottom: 10px;margin-top:-4px;">
+						<img src="assets/logo" style="width:160px;height:30px;">
+					</div>
+					<div style="position: absolute;margin-top: -35px;margin-left: 105px;">
+						<h1 class="sidebar-flex__title">
+
+								{{_ "管理者"}}
+						</h1>
+					</div>
+				{{else}}
+					<div style="margin-bottom: 10px;margin-top:-4px;margin-left:-20px">
+						<img src="assets/logo" style="width:160px;height:30px;">
+					</div>
+					<div style="position: absolute;margin-top: -35px;margin-left: 85px;">
+						<h1 class="sidebar-flex__title">
+							{{_ "サイト管理者"}}
+						</h1>
+					</div>
+				{{/if}}
 				<span class="rc-popover__icon" style = "position:absolute;margin-top:-35px;margin-left: 200px;">
 					<a id = "logout">
 						<svg class="rc-icon rc-popover__icon-element rc-popover__icon-element--sign-out" aria-hidden="true">

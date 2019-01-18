@@ -81,23 +81,30 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error('error-invalid-user', 'Invalid user', { method: 'removeSite' });
         }
-        var AllUsers = RocketChat.models.Users.findBySiteUrl(siteUrl).fetch();
 
 		var ret;
-		AllUsers.forEach(function (record) {
-			var UserId = record._id;
+
+        const site_keys = RocketChat.models.SiteKeys.find({'site_id':siteUrl}, {fields: {'key': 1}}).fetch();
+        site_keys.forEach(function (item) {
+
             //1. remove all messages of all users in site
-            ret =  RocketChat.models.Messages.removeByUserId(UserId);
+            let rooms = RocketChat.models.Rooms.find({'site_id':siteUrl}).fetch();
 
-            //2. remove all subscriptions of all users in site
-            ret &= RocketChat.models.Subscriptions.removeByUserId(UserId);
+            rooms.forEach(function (roomItem) {
+                ret = RocketChat.models.Messages.removeByRoomId(roomItem._id);
+            });
 
-            //3. remove all rooms which involves all users in site
-            ret &= RocketChat.models.Rooms.removeByUserId(UserId);
+            //2. remove all subscriptions in site
+            ret &= RocketChat.models.Subscriptions.removeBySiteKey(item.key);
         });
 
-        //4. remove all users in site
-        ret &= RocketChat.models.Users.removeBySiteUrl(siteUrl);
+
+
+        //3. remove all rooms in site
+        ret &= RocketChat.models.Rooms.removeBySiteId(siteUrl);
+
+        //4. remove all siteKey in site
+        ret &= RocketChat.models.SiteKeys.removeBySiteId(siteUrl);
 
         //5. remove site finally
 

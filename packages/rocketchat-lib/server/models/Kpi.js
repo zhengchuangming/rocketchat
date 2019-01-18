@@ -44,8 +44,6 @@ class ModelKpi extends RocketChat.models._Base {
                         }
                 },
 
-                { $sort: { default: -1, regDate : 1 } },
-
                 {
                     $group : {_id: "$dateFormat",
                         userCount: { $sum: "$userCount"},
@@ -55,6 +53,8 @@ class ModelKpi extends RocketChat.models._Base {
                         count: { $sum: 1 }
                     },
                 },
+
+                { $sort: { "_id" : 1 } },
             ]);
 
         }else{

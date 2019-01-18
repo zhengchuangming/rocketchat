@@ -168,9 +168,11 @@ Meteor.startup(function() {
 			const hasPermission = RocketChat.authz.hasAtLeastOnePermission('edit-message', message.rid);
 			const isEditAllowed = RocketChat.settings.get('Message_AllowEditing');
 			const editOwn = message.u && message.u._id === Meteor.userId();
-			if (!(hasPermission || (isEditAllowed && editOwn))) {
+			// if (!(hasPermission || (isEditAllowed && editOwn))) {
+			// 	return;
+			// }
+			if(!(isEditAllowed && editOwn))
 				return;
-			}
 			const blockEditInMinutes = RocketChat.settings.get('Message_AllowEditing_BlockEditInMinutes');
 			if (blockEditInMinutes) {
 				let msgTs;

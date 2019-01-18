@@ -97,24 +97,47 @@ function loginProcess(formData,siteKey,loginMethod){
             }
             return;
         }
-        //********** save siteKey into localstorage and User collection  ***********
 
-        if (siteKey)
-            localStorage.setItem("siteKey", siteKey);
 
-        if (siteKey != 'undefined') {
-            Meteor.call('saveSiteKeyIntoUser', siteKey, function (error, result) {
-                //if update is Ok
-                if (result > 0) {
-                    console.log("saveResult", result);
-                } else {
-                    toastr.error(t('siteKey save error!'));
+        const user = Meteor.user();
+        const username = user.username;
+        result = Meteor.call('getFullUserData', { username, limit: 1 },function(error,result){
+            if(result.length > 0 && result[0].roles.toString().indexOf('SiteManager') > -1){
+
+       //-------------------- if  site is disable when user is SiteManager ----------------------
+               Meteor.call('IsEnableSite',result[0].site_id ,function(error1,result1){
+                    // instance.loading.set(false);
+                    if (error1 != null || !result1) {
+                        toastr.error(t('This site is disabled!'));
+
+                        Meteor.logout(function() {
+                            RocketChat.callbacks.run('afterLogoutCleanUp', user);
+                            Meteor.call('logoutCleanUp', user);
+                        });
+                        return;
+                    }
+               });
+
+            }else{
+                //********** save siteKey into localstorage and User collection  ***********
+                if (siteKey)
+                    localStorage.setItem("siteKey", siteKey);
+
+                if (siteKey != 'undefined') {
+                    Meteor.call('saveSiteKeyIntoUser', siteKey, function (error, result) {
+                        //if update is Ok
+                        if (result > 0) {
+                            console.log("saveResult", result);
+                        } else {
+                            toastr.error(t('siteKey save error!'));
+                        }
+                    });
                 }
-            });
-        }
+                Session.set('forceLogin', false);
+                FlowRouter.go('home');
+            }
+        });
 
-        Session.set('forceLogin', false);
-        FlowRouter.go('home');
     });
 }
 Template.loginForm.events({
@@ -317,7 +340,6 @@ Template.loginForm.events({
                     console.log("loginMethod = 'loginWithCrowd';");
                     loginMethod = 'loginWithCrowd';
                 }
-
                 //check if siteKey is valid
                 if(Template.instance().IsDirectOrIframeCall != true) {
                     Meteor.call('IsEnableSiteKey', siteUrl, siteKey, function (error, result) {

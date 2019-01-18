@@ -870,6 +870,13 @@ class ModelSubscriptions extends RocketChat.models._Base {
 		return result;
 	}
 
+	removeBySiteKey(siteKey){
+        const query = {
+            'siteKey': siteKey,
+        };
+
+        return this.remove(query);
+	}
 	removeByRoomId(roomId) {
 		const query = {
 			rid: roomId,

@@ -872,7 +872,6 @@ RocketChat.models.Messages = new class extends RocketChat.models._Base {
 			},
 		});
 	}
-
 	removeFilesByRoomId(roomId) {
 		console.log("removeFilesByRoomId(roomId) {");
 		this.find({

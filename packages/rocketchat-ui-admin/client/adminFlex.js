@@ -24,6 +24,12 @@ const label = function() {
 // });
 
 Template.adminFlex.helpers({
+    isSuperAdmin(){
+        if(Accounts.user().roles.toString().indexOf('admin') > -1)
+            return true;
+        else
+            return false;
+    },
 	groups() {
 		const filter = Template.instance().settingsFilter.get();
 		const query = {

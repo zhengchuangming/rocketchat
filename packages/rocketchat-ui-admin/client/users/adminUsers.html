@@ -78,24 +78,25 @@
 							</thead>
 							<tbody>
 								{{#each users}}
-									{{#if isYou username}}
-									{{else}}
-										<tr class="user-info row-link {{#if not active}}deactivated{{/if}}">
-											<td class="border-component-color">
-												<div class="user-image status-{{status}}">
-													{{> avatar username=username}}
-												</div>
-											</td>
-											{{#if isSuperAdmin}}
-												<td class="border-component-color">{{site_id}}</td>
-											{{/if}}
-											<td class="border-component-color">{{name}}</td>
-											<td class="border-component-color">{{username}}</td>
-											<td class="border-component-color">{{emailAddress}}</td>
-											<td class="border-component-color">{{roles}}</td>
-											<td class="border-component-color">{{status}}</td>
-										</tr>
-									{{/if}}
+									{{#unless isYou username}}
+										{{#unless isSuperAdminUser roles}}
+											<tr class="user-info row-link {{#if not active}}deactivated{{/if}}">
+												<td class="border-component-color">
+													<div class="user-image status-{{status}}">
+														{{> avatar username=username}}
+													</div>
+												</td>
+												{{#if isSuperAdmin}}
+													<td class="border-component-color">{{site_id}}</td>
+												{{/if}}
+												<td class="border-component-color">{{name}}</td>
+												<td class="border-component-color">{{username}}</td>
+												<td class="border-component-color">{{emailAddress}}</td>
+												<td class="border-component-color">{{roles}}</td>
+												<td class="border-component-color">{{status}}</td>
+											</tr>
+										{{/unless}}
+									{{/unless}}
 								{{/each}}
 							</tbody>
 						</table>

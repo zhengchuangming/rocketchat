@@ -23,21 +23,22 @@ RocketChat.deleteUser = function(userId) {
 					const numOwners = RocketChat.authz.getUsersInRole('owner', subscription.rid).fetch().length;
 					// If it's only one, then this user is the only owner.
 					if (numOwners === 1) {
+						console.log("====================== delete user (server) ==================================123qwe123qwe");
 						// If the user is the last owner of a public channel, then we need to abort the deletion
-						if (roomData.t === 'c') {
-							throw new Meteor.Error('error-user-is-last-owner', `To delete this user you'll need to set a new owner to the following room: ${ subscription.name }.`, {
-								method: 'deleteUser',
-							});
-						}
-
-						// For private groups, let's check how many subscribers it has. If the user is the only subscriber, then it will be eliminated and doesn't need to abort the deletion
-						roomData.subscribers = RocketChat.models.Subscriptions.findByRoomId(subscription.rid).count();
-
-						if (roomData.subscribers > 1) {
-							throw new Meteor.Error('error-user-is-last-owner', `To delete this user you'll need to set a new owner to the following room: ${ subscription.name }.`, {
-								method: 'deleteUser',
-							});
-						}
+						// if (roomData.t === 'c') {
+						// 	throw new Meteor.Error('error-user-is-last-owner', `To delete this user you'll need to set a new owner to the following room: ${ subscription.name }.`, {
+						// 		method: 'deleteUser',
+						// 	});
+						// }
+						//
+						// // For private groups, let's check how many subscribers it has. If the user is the only subscriber, then it will be eliminated and doesn't need to abort the deletion
+						// roomData.subscribers = RocketChat.models.Subscriptions.findByRoomId(subscription.rid).count();
+						//
+						// if (roomData.subscribers > 1) {
+						// 	throw new Meteor.Error('error-user-is-last-owner', `To delete this user you'll need to set a new owner to the following room: ${ subscription.name }.`, {
+						// 		method: 'deleteUser',
+						// 	});
+						// }
 					}
 				}
 			}

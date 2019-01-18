@@ -80,7 +80,7 @@ Template.sideNav.onCreated(function() {
 	if(userRole.indexOf('admin') > -1 || userRole.indexOf('SiteManager') > -1 ) {
         SideNav.setFlex('adminFlex');
         SideNav.openFlex();
-        FlowRouter.go('admin-info');
+        FlowRouter.go('admin-kpi');
     }
 	this.autorun(() => {
 		const user = RocketChat.models.Users.findOne(Meteor.userId(), {

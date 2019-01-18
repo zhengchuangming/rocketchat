@@ -200,6 +200,7 @@ Meteor.methods({
 		// return res;
 	},
     IsEnableSite(Url){
+		console.log("===========================234234:",Url);
         return RocketChat.models.Sites.IsEnableSite(Url);
     },
     IsEnableSiteKey(Url,siteKey){

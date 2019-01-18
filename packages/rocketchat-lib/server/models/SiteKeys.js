@@ -51,6 +51,11 @@ class ModelSiteKeys extends RocketChat.models._Base {
         }
         return -1;
 	}
+	removeBySiteId(siteId){
+		let query = {site_id : siteId};
+        return this.remove(query);
+	}
+
 	enableOneSiteKey(key){
         return this.update(
             {key: key},

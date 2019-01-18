@@ -37,7 +37,8 @@ Template.resetPassword.events({
 						title: t('Error_changing_password'),
 						type: 'error',
 					});
-				}
+				}else
+                    FlowRouter.go('home');
 			});
 		} else {
 			Accounts.resetPassword(FlowRouter.getParam('token'), instance.find('[name=newPassword]').value, function(error) {

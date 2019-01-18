@@ -8,7 +8,7 @@ Template.adminUsers.helpers({
         return Template.instance().users().length - 1;
 	},
 	isSuperAdmin(){
-        if(Accounts.user().roles.toString().indexOf('admin') > 0)
+        if(Accounts.user().roles.toString().indexOf('admin') > -1)
         	return true;
         else
         	return false;
@@ -16,6 +16,12 @@ Template.adminUsers.helpers({
 	isYou(username){
 		if(username == Accounts.user().username)
         	return true;
+		else
+			return false;
+	},
+	isSuperAdminUser(role){
+		if(role.toString().indexOf('admin') > -1)
+			return true;
 		else
 			return false;
 	},

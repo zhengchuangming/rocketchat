@@ -985,6 +985,18 @@ class ModelRooms extends RocketChat.models._Base {
 
 		return this.remove(query);
 	}
+    removeBySiteId(SiteId) {
+        const query = {site_id:SiteId};
+
+        return this.remove(query);
+    }
+
+    removeBySiteKey(SiteKey) {
+        const query = {siteKey:SiteKey};
+
+        return this.remove(query);
+    }
+
     removeByUserId(UserId) {
         const query = { $or: [{
                 _id : /UserId/,

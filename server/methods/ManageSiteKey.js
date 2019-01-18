@@ -68,26 +68,23 @@ Meteor.methods({
         if (!Meteor.userId()) {
             throw new Meteor.Error('error-invalid-user', 'Invalid user', { method: 'removeSiteKey' });
         }
-        // var AllUsers = RocketChat.models.Users.findBySiteUrl(siteUrl).fetch();
-        //
-		var ret;
-		// AllUsers.forEach(function (record) {
-		// 	var UserId = record._id;
-        //     //1. remove all messages of all users in site
-        //     ret =  RocketChat.models.Messages.removeByUserId(UserId);
-        //
-        //     //2. remove all subscriptions of all users in site
-        //     ret &= RocketChat.models.Subscriptions.removeByUserId(UserId);
-        //
-        //     //3. remove all rooms which involves all users in site
-        //     ret &= RocketChat.models.Rooms.removeByUserId(UserId);
-        // });
-        //
-        // //4. remove all users in site
-        // ret &= RocketChat.models.Users.removeBySiteUrl(key);
-        //
-        // //5. remove site finally
 
+		var ret;
+
+        //1. remove all messages of all users in siteKey
+        let rooms = RocketChat.models.Rooms.find({'siteKey':key}).fetch();
+
+        rooms.forEach(function (roomItem) {
+            ret = RocketChat.models.Messages.removeByRoomId(roomItem._id);
+        });
+
+        //2. remove all subscriptions in site
+        ret &= RocketChat.models.Subscriptions.removeBySiteKey(key);
+
+        //3. remove all rooms in site
+        ret &= RocketChat.models.Rooms.removeBySiteKey(key);
+
+        //4. remove siteKey
         ret &= RocketChat.models.SiteKeys.removeOneSiteKey(key);
 
         return ret;
