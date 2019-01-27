@@ -105,16 +105,27 @@
 	right: auto;
 	left: 2px;
 }
+/*------------- to hide message-actions when min-width 500px /123qwe123qwe---------------------*/
+/*@media (width >= 500px) {*/
+	/*.message {*/
+		/*&:hover,*/
+		/*&.active {*/
+			/*background-color: rgba(0, 0, 0, 0.05);*/
 
-@media (width >= 500px) {
-	.message {
-		&:hover,
-		&.active {
-			background-color: rgba(0, 0, 0, 0.05);
+			/*& .message-actions {*/
+				/*display: flex;*/
+			/*}*/
+		/*}*/
+	/*}*/
+/*}*/
 
-			& .message-actions {
-				display: flex;
-			}
-		}
+.message {
+	&:hover,
+	&.active {
+		 background-color: rgba(0, 0, 0, 0.05);
+
+	& .message-actions {
+		  display: flex;
+	  }
 	}
 }

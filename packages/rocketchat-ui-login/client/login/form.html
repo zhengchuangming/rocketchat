@@ -190,4 +190,12 @@
 			</div>
 		</div>
 	{{/if}}
+	<script>
+		function removeIframe(){
+			window.top.postMessage('close-iframe','*');
+		}
+        function showChatButton(){
+            window.top.postMessage('show-chat-button','*');
+        }
+	</script>
 </template>

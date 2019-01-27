@@ -173,14 +173,14 @@ export const RoomHistoryManager = new class {
 			wrapper.animate({
 				scrollTop: pos,
 			}, 500);
-			msgElement.addClass('highlight');
-
+			// msgElement.addClass('highlight');
+            msgElement.css("background-color",'rgb(249, 228, 145)');
 			setTimeout(function() {
 				const messages = wrapper[0];
 				return instance.atBottom = messages.scrollTop >= (messages.scrollHeight - messages.clientHeight);
 			});
 
-			return setTimeout(() => msgElement.removeClass('highlight'), 500);
+			// return setTimeout(() => msgElement.removeClass('highlight'), 500);
 		} else {
 			const room = this.getRoom(message.rid);
 			room.isLoading.set(true);
@@ -217,8 +217,8 @@ export const RoomHistoryManager = new class {
 						scrollTop: pos,
 					}, 500);
 
-					msgElement.addClass('highlight');
-
+					// msgElement.addClass('highlight');
+                    msgElement.css("background-color",'rgb(249, 228, 145)');
 					setTimeout(function() {
 						room.isLoading.set(false);
 						const messages = wrapper[0];
@@ -226,7 +226,7 @@ export const RoomHistoryManager = new class {
 						return 500;
 					});
 
-					return setTimeout(() => msgElement.removeClass('highlight'), 500);
+					// return setTimeout(() => msgElement.removeClass('highlight'), 500);
 				});
 				if (room.loaded == null) { room.loaded = 0; }
 				room.loaded += result.messages.length;

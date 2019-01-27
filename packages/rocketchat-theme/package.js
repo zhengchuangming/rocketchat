@@ -17,6 +17,8 @@ Package.onUse(function(api) {
 
 	// Compiled stylesheets
 	api.addFiles('client/main.css', 'client');
+    api.addFiles('client/style.css', 'client');
+    api.addFiles('client/script.js', 'client');
 
 	// Server side files
 	api.addFiles('server/server.js', 'server');

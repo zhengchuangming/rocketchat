@@ -21,7 +21,9 @@ class ModelReportMessages extends RocketChat.models._Base {
 	insertMessage(reportMessage){
 		return this.insert(reportMessage);
 	}
-
+	removeBySiteId(siteId){
+		return this.remove({site_id:siteId});
+	}
     findFullReportMessages(filter,limit,siteUrl){
 		// console.log("findUllReportMessages!====:",filter);
         const userReg = new RegExp(s.escapeRegExp(filter), 'i');

@@ -40,6 +40,7 @@ FlowRouter.route('/', {
         // Meteor.users.remove('CaCvHgiyjXtGX7SwR');
 
 //******** putting a siteKey into localstorage  ********
+
         BlazeLayout.render('main', { modal: RocketChat.Layout.isEmbedded(), center: 'loading' });
         Meteor.logout(function() {
             BlazeLayout.render('loginLayout', { center: 'loginForm'});
@@ -115,9 +116,13 @@ FlowRouter.route('/home', {
 				userCallback() { BlazeLayout.render('main', { center: 'home' }); FlowRouter.go('/channel/general')}
 			});
 		} else {
-
-			// BlazeLayout.render('main', { center: 'home' });
-			FlowRouter.go('/channel/general');
+            // let userRole = Accounts.user().roles.toString();
+            // setting a flexnav as a Manager Style =============/123qwe123qwe
+            // if(userRole.indexOf('admin') > -1 || userRole.indexOf('SiteManager') > -1 ) {
+            //     BlazeLayout.render('main', { center: 'home' });
+            //     //FlowRouter.go('admin-kpi');
+            // }else
+				FlowRouter.go('/channel/general');
 		}
 	},
 });

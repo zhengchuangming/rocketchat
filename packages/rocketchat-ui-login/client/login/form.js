@@ -99,26 +99,26 @@ function loginProcess(formData,siteKey,loginMethod){
         }
 
 
-        const user = Meteor.user();
-        const username = user.username;
-        result = Meteor.call('getFullUserData', { username, limit: 1 },function(error,result){
-            if(result.length > 0 && result[0].roles.toString().indexOf('SiteManager') > -1){
-
-       //-------------------- if  site is disable when user is SiteManager ----------------------
-               Meteor.call('IsEnableSite',result[0].site_id ,function(error1,result1){
-                    // instance.loading.set(false);
-                    if (error1 != null || !result1) {
-                        toastr.error(t('This site is disabled!'));
-
-                        Meteor.logout(function() {
-                            RocketChat.callbacks.run('afterLogoutCleanUp', user);
-                            Meteor.call('logoutCleanUp', user);
-                        });
-                        return;
-                    }
-               });
-
-            }else{
+       //  const user = Meteor.user();
+       //  const username = user.username;
+       //  result = Meteor.call('getFullUserData', { username, limit: 1 },function(error,result){
+       //      if(result.length > 0 && result[0].roles.toString().indexOf('SiteManager') > -1){
+       //
+       // //-------------------- if  site is disable when user is SiteManager ----------------------
+       //         Meteor.call('IsEnableSite',result[0].site_id ,function(error1,result1){
+       //              // instance.loading.set(false);
+       //              if (error1 != null || !result1) {
+       //                  toastr.error(t('This site is disabled!'));
+       //
+       //                  Meteor.logout(function() {
+       //                      RocketChat.callbacks.run('afterLogoutCleanUp', user);
+       //                      Meteor.call('logoutCleanUp', user);
+       //                  });
+       //                  return;
+       //              }
+       //         });
+       //
+       //      }else{
                 //********** save siteKey into localstorage and User collection  ***********
                 if (siteKey)
                     localStorage.setItem("siteKey", siteKey);
@@ -135,8 +135,8 @@ function loginProcess(formData,siteKey,loginMethod){
                 }
                 Session.set('forceLogin', false);
                 FlowRouter.go('home');
-            }
-        });
+        //     }
+        // });
 
     });
 }
@@ -228,7 +228,8 @@ Template.loginForm.events({
                 Meteor.call('IsEnableSiteKey', siteUrl,siteKey,function(error,result) {
                     instance.loading.set(false);
                     if (error != null || !result) {
-                        toastr.error(t('SiteKey is invalid'));
+                        $(".chat-container").remove();
+//                        toastr.error(t('SiteKey is invalid'));
                         return;
                     } else {
                         formData.secretURL = FlowRouter.getParam('hash');
@@ -345,6 +346,8 @@ Template.loginForm.events({
                     Meteor.call('IsEnableSiteKey', siteUrl, siteKey, function (error, result) {
                         instance.loading.set(false);
                         if (error != null || !result) {
+                            $(".chat_start",parent.Document).remove();
+                            // window.removeIframe();
                             toastr.error(t('SiteKey is invalid'));
                             return;
                         } else {
@@ -415,6 +418,25 @@ Template.loginForm.onCreated(function() {
         this.ParentSiteUrl = siteUrlTemp.split("//")[1].split("/")[0].split(":")[0];
 
     console.log("==========123==========:",siteUrlTemp);
+
+    if(parent !== window) {
+
+        var currentUrl = window.location.href;
+        var siteKey;
+
+        if(currentUrl.indexOf("key") > 0) {
+            siteKey = currentUrl.substring(currentUrl.indexOf("key") + 4, currentUrl.length);
+        }else
+            siteKey = localStorage.getItem("siteKey");
+        console.log("===XXXXX===",this.ParentSiteUrl + ":"+siteKey);
+        Meteor.call('IsEnableSiteKey', this.ParentSiteUrl, siteKey, function (error, result) {
+            instance.loading.set(false);
+            if (error != null || !result) {
+                window.removeIframe();
+            } else
+                window.showChatButton();
+        });
+    }
 
     // Meteor.subscribe('getOneSite','localhost');
     // this.registeredSites = new Mongo.Collection('rocketchat_registered_sites');

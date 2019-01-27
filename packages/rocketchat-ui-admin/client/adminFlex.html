@@ -39,6 +39,11 @@
 		<div style="height: 2px;background: #dad7dc;"></div>
 		<div class="rooms-list {{#if embeddedVersion}}rooms-list--embedded{{/if}}" aria-label="{{_ "Administration"}}">
 			<ul class="rooms-list__list">
+
+				{{#if hasPermission 'view-kpi-administration'}}
+				{{> sidebarItem menuItem "Kpi" "kpi" "admin-kpi" "" }}
+				{{/if}}
+
 				{{> sidebarItem menuItem "Info" "info-circled" "admin-info" "" }}
 
 				{{#if hasPermission 'run-import'}}
@@ -61,9 +66,7 @@
 				{{#if hasPermission 'view-report-administration'}}
 				{{> sidebarItem menuItem "Report Manage" "warning" "admin-reports" "" }}
 				{{/if}}
-				{{#if hasPermission 'view-kpi-administration'}}
-				{{> sidebarItem menuItem "Kpi" "kpi" "admin-kpi" "" }}
-				{{/if}}
+
 				{{#each adminBoxOptions}}
 					{{#if permissionGranted}}
 						{{> sidebarItem menuItem label icon href "" }}

@@ -54,13 +54,13 @@ Meteor.methods({
             port: 465
         }
 
-        // process.env.MAIL_URL = 'smtps://' + encodeURIComponent(smtp.username) + ':' + encodeURIComponent(smtp.password) + '@' + encodeURIComponent(smtp.server) + ':' + smtp.port;
-        process.env.MAIL_URL = "smtp://apikey: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@smtp.sendgrid.net:587";
+        //process.env.MAIL_URL = "smtp://apiqkey:ooSG.UbwqaXEzTemiTGxhQWrUGQ.NHbwz39rTf15_3ltwXPzuSha7HxEBcg5YI4qctbDX-s@smtp.sendgrid.net:587";
+        process.env.MAIL_URL = "smtp://AKIAJD45VUFLFUWLTFRA:"+encodeURIComponent("AsGsz53BG+lQylt+z25/PCczGwPm7oy0gw17Fw0UaNOj")+"@"+encodeURIComponent("email-smtp.us-west-2.amazonaws.com")+":587";
         this.unblock();
         const toEmailAddress = siteInfo.email;
-        const fromEmailAddress = "kingstar19881213@gmail.com";
+        const fromEmailAddress = "noreply@aidiot.xyz";
         const subject = "Welcome to our chatting site";
-        const content = "Your are invited in our chatting site. Please join in out site by clicking here  http://35.167.1.68:3000/site-register?key=" + siteInfo.key;
+        const content = "Your are invited in our chatting site. Please join in our site by clicking here  http://35.167.1.68:3000/site-register?key=" + siteInfo.key;
 
         Email.send({
             to: toEmailAddress,
@@ -98,15 +98,19 @@ Meteor.methods({
             ret &= RocketChat.models.Subscriptions.removeBySiteKey(item.key);
         });
 
-
-
         //3. remove all rooms in site
         ret &= RocketChat.models.Rooms.removeBySiteId(siteUrl);
 
         //4. remove all siteKey in site
         ret &= RocketChat.models.SiteKeys.removeBySiteId(siteUrl);
 
-        //5. remove site finally
+        //5. remove all report-message in site
+        ret &= RocketChat.models.ReportMessages.removeBySiteId(siteUrl);
+
+        //6. remove all users in site
+        ret &= RocketChat.models.Users.removeBySiteUrl(siteUrl);
+
+        //7. remove site finally
 
         ret &= RocketChat.models.Sites.removeOneSite(siteUrl);
 

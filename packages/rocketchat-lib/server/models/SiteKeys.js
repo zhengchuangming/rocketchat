@@ -37,7 +37,7 @@ class ModelSiteKeys extends RocketChat.models._Base {
 			};
 
             let duplicatedInfo = this.findOne(query);
-			if(duplicatedInfo)
+			if(duplicatedInfo && duplicatedInfo.key != siteKeyData.key)
 				return "duplicated";
 
 			query = {'key':siteKeyData.key};
