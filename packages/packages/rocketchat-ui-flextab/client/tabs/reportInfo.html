@@ -1,0 +1,107 @@
+<template name="reportInfo">
+
+	<form class="" action="index.html" method="post" autocomplete="off">
+		<!--siteUrl-->
+		<div class="rc-input rc-form-group rc-form-group--small">
+			<label class="rc-input__label">
+				<div class="rc-input__title">{{_ "SiteURL"}}</div>
+				<div class="rc-input__wrapper">
+					<input name="name" type="text" class="rc-input__element rc-input__element--small" id="site_url" autocomplete="off" value="{{reportMessage.site_id}}" readonly/>
+				</div>
+			</label>
+		</div>
+		<!--siteKey-->
+		<div class="rc-input rc-form-group rc-form-group--small">
+			<label class="rc-input__label">
+				<div class="rc-input__title">{{_ "SiteKey"}}</div>
+				<div class="rc-input__wrapper">
+					<input name="name" type="text" class="rc-input__element rc-input__element--small" id="siteKey" autocomplete="off" value="{{reportMessage.siteKey.memo}}" readonly/>
+				</div>
+			</label>
+		</div>
+		<!--Room-->
+		<div class="rc-input rc-form-group rc-form-group--small">
+			<label class="rc-input__label">
+				<div class="rc-input__title">{{_ "Room"}}</div>
+				<div class="rc-input__wrapper">
+					<input name="name" type="text" class="rc-input__element rc-input__element--small" id="room" autocomplete="off" value="{{reportMessage.room.name}}" readonly/>
+				</div>
+			</label>
+		</div>
+		<!--reportUser-->
+		<div class="rc-input rc-form-group rc-form-group--small" style = "text-align: center;">
+			<div style = "display: inline-block">{{_ "ReportUser"}}</div>
+			<div class="rc-input__wrapper" style = "display: inline-block">
+				<button class='js-action rc-user-info-action__item' id="delete_reportUser">
+					<i class="icon-trash"></i>
+					{{_ "Delete"}}
+				</button>
+			</div>
+			<div style = "background:whitesmoke;text-align: left;">
+				<div style = "margin-bottom:10px;padding-top: 15px;margin-left:30px">
+					<div style = "margin-top:5px;display: inline-block;width:30%;">
+						<div>{{_ "Username"}}</div>
+					</div>
+					<span style = "display: inline-block;">{{reportUser.username}}</span>
+					<div class="rc-header__status-bullet rc-header__status-bullet--{{reportUser.status}}" style = "margin-left:10px;display: inline-block;margin-right:0" title="{{reportUser.status}}"></div>
+					<div class="rc-header__visual-status" style="display: inline-block">{{reportUser.status}}</div>
+				</div>
+				<div style = "margin-bottom:10px;margin-left:30px">
+					<div style = "margin-top:5px;display: inline-block;width:30%;">{{_ "Email"}}</div>
+					<span style = "display: inline-block;">{{reportUser.emails.[0].address}}</span>
+				</div>
+
+				<div style = "padding-bottom: 15px;margin-left:30px">
+					<div style = "margin-top:5px;display: inline-block;width:30%;">{{_ "Roles"}}</div>
+					<span style = "display:inline-block;">{{reportUser.roles.[0]}}</span>
+				</div>
+
+			</div>
+		</div>
+		<!--reportedUser-->
+		<div class="rc-input rc-form-group rc-form-group--small" style = "text-align: center;">
+			<div style = "display: inline-block">{{_ "ReportedUser"}}</div>
+			<div class="rc-input__wrapper" style = "display: inline-block">
+				<button class='js-action rc-user-info-action__item' id="delete_reportedUser">
+					<i class="icon-trash"></i>
+					{{_ "Delete"}}
+				</button>
+			</div>
+			<div style = "background:whitesmoke;text-align: left;">
+				<div style = "margin-bottom:10px;padding-top: 15px;margin-left:30px">
+					<div style = "margin-top:5px;display: inline-block;width:30%;">
+						<div>{{_ "Username"}}</div>
+
+					</div>
+					<span style = "display: inline-block;">{{reportedUser.username}}</span>
+					<div class="rc-header__status-bullet rc-header__status-bullet--{{reportedUser.status}}" style = "margin-left:10px;display: inline-block;margin-right:0" title="{{reportedUser.status}}"></div>
+					<div class="rc-header__visual-status" style="display: inline-block">{{reportedUser.status}}</div>
+				</div>
+				<div style = "margin-bottom:10px;margin-left:30px">
+					<div style = "margin-top:5px;display: inline-block;width:30%;">{{_ "Email"}}</div>
+					<span style = "display: inline-block;">{{reportedUser.emails.[0].address}}</span>
+				</div>
+
+				<div style = "padding-bottom: 15px;margin-left:30px">
+					<div style = "margin-top:5px;display: inline-block;width:30%;">{{_ "Roles"}}</div>
+					<span style = "display:inline-block;">{{reportedUser.roles.[0]}}</span>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="rc-input rc-form-group rc-form-group--small">
+			<label class="rc-input__label">
+				<div class="rc-input__title">{{_ "Message"}}</div>
+				<div class="rc-input__wrapper">
+					<textarea name="name" class="rc-input__element rc-input__element--small" id="message" autocomplete="off" value="{{reportMessage.reportMessage.description}}"></textarea>
+				</div>
+			</label>
+		</div>
+        <div class="rc-user-info__flex rc-user-info__row">
+            <button class='rc-button rc-button--cancel cancel' type="button"><span>{{_ "Cancel"}}</span></button>
+            <button class='rc-button rc-button--primary' id = "enterRoom" type = "button" style = "margin-left: auto;margin-right:auto"><span>{{_ "Enter_Room"}}</span></button>
+        </div>
+
+	</form>
+</template>

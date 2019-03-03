@@ -1,0 +1,15 @@
+<template name='registerErrorPage'>
+
+	<section class="rc-old full-page color-tertiary-font-color" style="{{#with backgroundUrl}}background-image: url('{{.}}'){{/with}}">
+		<div class="wrapper">
+			<label class="rc-input__label" for="emailOrUsername">
+				<div class="rc-input__wrapper">
+					<input name="emailOrUsername" id="emailOrUsername" type="text" class="rc-input__element"
+						   autocapitalize="off" autocorrect="off"
+						   placeholder="{{emailOrUsernamePlaceholder}}" autofocus>
+					<div class="input-error"></div>
+				</div>
+			</label>
+		</div>
+	</section>
+</template>
