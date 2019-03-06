@@ -102,7 +102,7 @@ Template.siteAdd.onCreated(function() {
 		const siteData = this.getSiteData();
 
         if (!/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/.test(siteData._id)) {
-            toastr.error(t('Invalid domain name') + '<br> ex:) www.sample.com');
+            toastr.error(t('Invalid_domain_name') + '<br> ex:) www.sample.com');
             return;
         }
 		if(!/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(siteData.email)){
@@ -115,10 +115,10 @@ Template.siteAdd.onCreated(function() {
                 return handleError(error);
             }
 			if (data == "duplicated") {
-				toastr.error(t('duplicated url exist'));
+				toastr.error(t('duplicated_url_exists'));
 				return;
 			}
-			toastr.success(t('add site successfully'));
+			toastr.success(t('added_site_successfully'));
 			this.cancel(form, '');
 		});
 	};

@@ -347,7 +347,7 @@ this.ChatMessages = class ChatMessages {
             if (error) {
                 return handleError(error);
             }
-            toastr.success("Successfully reported");
+            toastr.success(t("Successfully_reported"));
         });
 	}
 	deleteMsg(message) {

@@ -65,7 +65,7 @@ Template.siteKeyAdd.onCreated(function() {
 		// 	return;
 		// }
         if (this.$('#key').val() == '') {
-            toastr.error(t('Key is not generated!'));
+            toastr.error(t('Key_was_not_generated'));
             return;
         }
 		const siteKeyData = this.getSiteKeyData();
@@ -75,10 +75,10 @@ Template.siteKeyAdd.onCreated(function() {
                 return handleError(error);
 			}
 			if(data == "duplicated"){
-                toastr.error(t('duplicated Key or KeyName exist'));
+                toastr.error(t('duplicated_Key_or_KeyName_exists'));
                 return;
 			}
-			toastr.success(t('add siteKey successfully'));
+			toastr.success(t('added_siteKey_successfully'));
 			this.cancel(form, '');
 		});
 	};

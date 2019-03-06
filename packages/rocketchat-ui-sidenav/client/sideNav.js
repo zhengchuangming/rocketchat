@@ -78,6 +78,7 @@ Template.sideNav.onCreated(function() {
     let userRole = Accounts.user().roles.toString();
     // setting a flexnav as a Manager Style =============/123qwe123qwe
 	if(userRole.indexOf('admin') > -1 || userRole.indexOf('SiteManager') > -1 ) {
+		console.log("0000000000000000-------------*********************");
         SideNav.setFlex('adminFlex');
         SideNav.openFlex();
         FlowRouter.go('admin-kpi');

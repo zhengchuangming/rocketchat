@@ -28,7 +28,23 @@ Template.resetPassword.events({
 
 		const button = instance.$('button.resetpass');
 		RocketChat.Button.loading(button);
-
+		const param = FlowRouter.getParam('token');
+		console.log("--------------1",param);
+		if(param.indexOf("key=") > -1) {
+            Meteor.call('resetUserPassword', param.substr(4, param.length - 4), instance.find('[name=newPassword]').value, function (error) {
+                if (error) {
+                    console.log(error);
+                    modal.open({
+                        title: t('Error_changing_password'),
+                        type: 'error',
+                    });
+                } else {
+                    toastr.success(t('Password_changed_successfully'));
+                    FlowRouter.go('home');
+                }
+            });
+            return;
+        }
 		if (Meteor.userId() && !FlowRouter.getParam('token')) {
 			Meteor.call('setUserPassword', instance.find('[name=newPassword]').value, function(error) {
 				if (error) {

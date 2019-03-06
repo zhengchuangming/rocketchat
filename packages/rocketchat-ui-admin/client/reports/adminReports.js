@@ -99,7 +99,7 @@ Template.adminReports.events({
         e.preventDefault();
         modal.open({
             title: t('Are_you_sure'),
-            text: t('Are you sure wish to remove this reportMessage?'),
+            text: t('Are_you_sure_wish_to_remove_this_reportMessage'),
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#DD6B55',
@@ -112,7 +112,7 @@ Template.adminReports.events({
                 if (error) {
                     return toastr.error(t(error.error));
                 }
-                toastr.success("Successfully removed");
+                toastr.success(t("Successfully removed"));
             });
         });
     },

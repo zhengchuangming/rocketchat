@@ -74,7 +74,216 @@ RocketChat.settings.addGroup('Accounts', function() {
 		public: true,
 		i18nLabel: 'Register_a_site',
 	});
-	this.add('Accounts_PasswordPlaceholder', '', {
+    this.add('update_success', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'update_success',
+    });
+    this.add('sitekey_manage', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'sitekey_manage',
+    });
+
+    this.add('sitekey_mana', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'sitekey_mana',
+    });
+    this.add('Site_Manage', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'Site_Manage',
+    });
+    this.add('Invalid_domain_name', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'Invalid_domain_name',
+    });
+    this.add('duplicated_url_exists', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'duplicated_url_exists',
+    });
+    this.add('added_site_successfully', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'added_site_successfully',
+    });
+    this.add('site_manager_is_already_registered', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'site_manager_is_already_registered',
+    });
+    this.add('site_is_not_registered', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'site_is_not_registered',
+    });
+    this.add('Key_was_not_generated', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'Key_was_not_generated',
+    });
+    this.add('duplicated_Key_or_KeyName_exists', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'duplicated_Key_or_KeyName_exists',
+    });
+    this.add('added_siteKey_successfully', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'added_siteKey_successfully',
+    });
+    this.add('There_is_no_User', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'There_is_no_User',
+    });
+    this.add('siteKey_save_error', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'siteKey_save_error',
+    });
+    this.add('Invalid_Site_Address', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'Invalid_Site_Address',
+    });
+    this.add('No_site_is_selected', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'No_site_is_selected',
+    });
+    this.add('No_siteKey_is_selected', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'No_siteKey_is_selected',
+    });
+    this.add('Site_manager_is_not_invited_yet', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'Site_manager_is_not_invited_yet',
+    });
+    this.add('Same_siteurl_alreay_exists', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'Same_siteurl_alreay_exists',
+    });
+    this.add('updated_site_successfully', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'updated_site_successfully',
+    });
+    this.add('Save_fail', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'Save_fail',
+    });
+    this.add('duplicated_KeyName', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'duplicated_KeyName',
+    });
+    this.add('E-mail_was_sent_successfully', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'E-mail_was_sent_successfully',
+    });
+    this.add('Successfully_removed', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'Successfully_removed',
+    });this.add('Successfully_reported', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'Successfully_reported',
+    });this.add('Enter_Room', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'Enter_Room',
+    });this.add('Same_siteurl_alreay_exists', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'Same_siteurl_alreay_exists',
+    });this.add('SiteURL', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'SiteURL',
+    });
+    this.add('SiteURL', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'SiteURL',
+    });
+    this.add('key', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'key',
+    });
+    this.add('KeyName', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'KeyName',
+    });
+    this.add('Generate_Key', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'Generate_Key',
+    });
+    this.add('ReportUser', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'ReportUser',
+    });
+    this.add('offline', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'offline',
+    });
+    this.add('Report', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'Report',
+    });
+
+    this.add('SiteKey', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'SiteKey',
+    });
+    this.add('Are_you_sure_wish_to_remove_this_site', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'Are_you_sure_wish_to_remove_this_site',
+    });
+    this.add('Are_you_sure_wish_to_remove_this_User', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'Are_you_sure_wish_to_remove_this_User',
+    });
+    this.add('Are_you_sure_wish_to_remove_this_siteKey', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'Are_you_sure_wish_to_remove_this_siteKey',
+    });
+    this.add('Are_you_sure_wish_to_remove_this_reportMessage', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'Are_you_sure_wish_to_remove_this_reportMessage',
+    });
+    this.add('Admin', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'Admin',
+    });
+    this.add('SiteManager', '', {
+        type: 'string',
+        public: true,
+        i18nLabel: 'SiteManager',
+    });
+
+    this.add('Accounts_PasswordPlaceholder', '', {
 		type: 'string',
 		public: true,
 		i18nLabel: 'Placeholder_for_password_login_field',

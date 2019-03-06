@@ -78,7 +78,7 @@ Template.siteEdit.onCreated(function() {
 		//check invite and status
 
         if(siteData.invite == false && siteData.status == true) {
-            toastr.error(t('Site manager is not invited yet!'));
+            toastr.error(t('Site_manager_is_not_invited_yet'));
             siteData.status = false;
         }
 
@@ -87,7 +87,7 @@ Template.siteEdit.onCreated(function() {
 				return handleError(error);
 			}
 			if(data == "exist") {
-                toastr.error(t('Same siteurl is alreay exist!'));
+                toastr.error(t('Same_siteurl_alreay_exists'));
                 return;
             }else
 				toastr.success(t('Site_updated_successfully'));

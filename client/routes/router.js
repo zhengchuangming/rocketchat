@@ -90,9 +90,9 @@ FlowRouter.route('/site-register', {
             	console.log("Ok");
                 BlazeLayout.render('loginLayout', { center: 'siteRegisterForm' ,siteUrl : data.siteUrl,siteManagerEmail:data.email});
 			}else if(data.result == '0'){//site manager is already registered
-                toastr.error(t("site manager is already registered"));
+                toastr.error(t("site_manager_is_already_registered"));
 			}else if(data.result == '1'){//site is not registered
-                toastr.error(t("site is not registered"));
+                toastr.error(t("site_is_not_registered"));
 			}
         });
 
@@ -116,13 +116,33 @@ FlowRouter.route('/home', {
 				userCallback() { BlazeLayout.render('main', { center: 'home' }); FlowRouter.go('/channel/general')}
 			});
 		} else {
-            // let userRole = Accounts.user().roles.toString();
             // setting a flexnav as a Manager Style =============/123qwe123qwe
-            // if(userRole.indexOf('admin') > -1 || userRole.indexOf('SiteManager') > -1 ) {
-            //     BlazeLayout.render('main', { center: 'home' });
-            //     //FlowRouter.go('admin-kpi');
-            // }else
-				FlowRouter.go('/channel/general');
+             const user = Meteor.user();
+
+             if(user == null){
+
+                 FlowRouter.go('/channel/general');
+
+			 }else {
+
+                 const username = user.username;
+                 result = Meteor.call('getFullUserData', {username, limit: 1}, function (error, result) {
+
+                     if (result.length > 0) {
+
+                         let userRole = result[0].roles.toString();
+
+                         if (userRole.indexOf('SiteManager') > -1 | userRole.indexOf('admin') > -1) {
+
+                             BlazeLayout.render('main', {center: 'home'});
+                             FlowRouter.go('admin-kpi');
+
+                         } else {
+                             FlowRouter.go('/channel/general');
+                         }
+                     }
+                 });
+             }
 		}
 	},
 });

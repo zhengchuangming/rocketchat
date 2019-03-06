@@ -32,7 +32,7 @@ Template.reportInfo.events({
         e.preventDefault();
         modal.open({
             title: t('Are_you_sure'),
-            text: t('Are you sure wish to remove this User?'),
+            text: t('Are_you_sure_wish_to_remove_this_User'),
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#DD6B55',
@@ -60,7 +60,7 @@ Template.reportInfo.events({
         e.preventDefault();
         modal.open({
             title: t('Are_you_sure'),
-            text: t('Are you sure wish to remove this User?'),
+            text: t('Are_you_sure_wish_to_remove_this_User'),
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#DD6B55',
@@ -161,7 +161,7 @@ Template.reportInfo.onCreated(function() {
                 }
                 return;
             }else
-                toastr.error(t('There is no User!'));
+                toastr.error(t('There_is_no_User'));
         });
 	});
 });

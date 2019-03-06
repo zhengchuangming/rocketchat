@@ -129,10 +129,14 @@ function loginProcess(formData,siteKey,loginMethod){
                         if (result > 0) {
                             console.log("saveResult", result);
                         } else {
-                            toastr.error(t('siteKey save error!'));
+                            toastr.error(t('siteKey_save_error'));
                         }
                     });
                 }
+
+                Session.set('flex-nav-template', null);
+                Session.set('flex-nav-data', null);
+
                 Session.set('forceLogin', false);
                 FlowRouter.go('home');
         //     }
@@ -165,7 +169,7 @@ Template.loginForm.events({
             if ($('[name = site_url]').val())
                 siteUrl = $('[name = site_url]').val();
             else {
-                toastr.error(t('Invalid Site Address'));
+                toastr.error(t('Invalid_Site_Address'));
                 instance.loading.set(false);
                 return;
             }
@@ -178,6 +182,10 @@ Template.loginForm.events({
                 site_id: siteUrl
             };
             // formData = {name:$('[name = name]').val(),email:$('[name = email]').val(),pass:$('[name = pass]').val(),site_url:$('[name = site_url]').val()};
+        }else if (state === 'forgot-password' || state === 'email-verification'){
+            formData = {
+                email: $('[name = email]').val(),
+            };
         }else
             formData = {emailOrUsername:$('[name = emailOrUsername]').val(),pass:$('[name = pass]').val(),site_id:siteUrl};
         // formData = instance.validate();
@@ -303,7 +311,7 @@ Template.loginForm.events({
                                             if (result > 0) {
                                                 console.log("saveResult", result);
                                             } else {
-                                                toastr.error(t('siteKey save error!'));
+                                                toastr.error(t('siteKey_save_error'));
                                             }
                                         });
                                     }

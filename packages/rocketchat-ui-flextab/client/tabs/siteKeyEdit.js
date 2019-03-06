@@ -50,13 +50,13 @@ Template.siteKeyEdit.onCreated(function() {
 				return handleError(error);
 			}
 			if(data == "-1") {
-                toastr.error(t('Save fail!'));
+                toastr.error(t('Save_fail'));
                 return;
             }else if(data == "duplicated"){
-                toastr.error(t('KeyName duplicated!'));
+                toastr.error(t('duplicated_KeyName'));
                 return;
 			}else
-				toastr.success(t('Updated successfully'));
+				toastr.success(t('update_success'));
 			this.cancel(form, '');
 		});
 	};

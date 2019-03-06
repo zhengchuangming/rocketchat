@@ -130,7 +130,7 @@ Template.adminSites.events({
                     if (error) {
                         return toastr.error(t(error.error));
                     }
-                    toastr.success("Successfully e-mail was transformed");
+                    toastr.success("E-mail_was_sent successfully");
                 });
             });
             instance.tabBarData.set(RocketChat.models.Sites.findOne(this._id));
@@ -141,7 +141,7 @@ Template.adminSites.events({
         e.preventDefault();
         modal.open({
             title: t('Are_you_sure'),
-            text: t('Are you sure wish to remove this site?'),
+            text: t('Are_you_sure_wish_to_remove_this_site'),
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#DD6B55',
@@ -154,7 +154,7 @@ Template.adminSites.events({
                 if (error) {
                     return toastr.error(t(error.error));
                 }
-                toastr.success("Successfully removed");
+                toastr.success(t("Successfully_removed"));
             });
         });
     },

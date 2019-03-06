@@ -127,10 +127,10 @@ Template.flexTabBar.events({
 
 		//123qwe123qwe / flextab is not displayed when you pressed site_edit button with not selected site!
 		if(!Template.currentData().data && this.template == "siteEdit"){
-            return toastr.error(t('No site is selected!'));
+            return toastr.error(t('No_site_is_selected'));
 		}
         if(!Template.currentData().data && this.template == "siteKeyEdit"){
-            return toastr.error(t('No siteKey is selected!'));
+            return toastr.error(t('No_siteKey_is_selected'));
         }
 		if (instance.tabBar.getState() === 'opened' && instance.tabBar.getTemplate() === this.template) {
 			$flexTab.attr('template', '');

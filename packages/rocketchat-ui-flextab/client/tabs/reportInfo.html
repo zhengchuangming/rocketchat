@@ -4,7 +4,7 @@
 		<!--siteUrl-->
 		<div class="rc-input rc-form-group rc-form-group--small">
 			<label class="rc-input__label">
-				<div class="rc-input__title">{{_ "SiteUrl"}}</div>
+				<div class="rc-input__title">{{_ "SiteURL"}}</div>
 				<div class="rc-input__wrapper">
 					<input name="name" type="text" class="rc-input__element rc-input__element--small" id="site_url" autocomplete="off" value="{{reportMessage.site_id}}" readonly/>
 				</div>
@@ -34,7 +34,7 @@
 			<div class="rc-input__wrapper" style = "display: inline-block">
 				<button class='js-action rc-user-info-action__item' id="delete_reportUser">
 					<i class="icon-trash"></i>
-					delete
+					{{_ "Delete"}}
 				</button>
 			</div>
 			<div style = "background:whitesmoke;text-align: left;">
@@ -64,7 +64,7 @@
 			<div class="rc-input__wrapper" style = "display: inline-block">
 				<button class='js-action rc-user-info-action__item' id="delete_reportedUser">
 					<i class="icon-trash"></i>
-					delete
+					{{_ "Delete"}}
 				</button>
 			</div>
 			<div style = "background:whitesmoke;text-align: left;">
@@ -100,7 +100,7 @@
 		</div>
         <div class="rc-user-info__flex rc-user-info__row">
             <button class='rc-button rc-button--cancel cancel' type="button"><span>{{_ "Cancel"}}</span></button>
-            <button class='rc-button rc-button--primary' id = "enterRoom" type = "button" style = "margin-left: auto;margin-right:auto"><span>{{_ "Enter Room"}}</span></button>
+            <button class='rc-button rc-button--primary' id = "enterRoom" type = "button" style = "margin-left: auto;margin-right:auto"><span>{{_ "Enter_Room"}}</span></button>
         </div>
 
 	</form>
