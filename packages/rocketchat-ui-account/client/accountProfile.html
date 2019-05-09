@@ -54,15 +54,15 @@
 												{{/each}}
 											{{else}}
 												<div class="rc-select-avatar__loading">
-													{{_ "Loading_suggestion"}}
+													{{_ "無効なURLを使用できますか..."}}
 												</div>
 											{{/if}}
 											<div class="rc-input">
 
 												<label class="rc-input__label">
-													<div class="rc-input__title">{{_ "Use_url_for_avatar"}}</div>
+													<div class="rc-input__title">{{_ "urlから 追加"}}</div>
 													<div class="rc-input__wrapper">
-														<input name="avatar_url" class="rc-input__element js-avatar-url-input" placeholder="{{_ "Use_url_for_avatar"}}">
+														<input name="avatar_url" class="rc-input__element js-avatar-url-input" placeholder="{{_ "urlから 追加"}}">
 													</div>
 												</label>
 											</div>
@@ -161,20 +161,7 @@
 						</div>
 					</div>
 				</fieldset>
-				<fieldset>
-					<!-- <legend style="margin-bottom: 2.5rem;">Custom Fields</legend> -->
-					{{> customFieldsForm hideFromForm=false formData=customFields new=true}}
-				</fieldset>
-				<div class="rc-form-group rc-grid">
-					<div class="rc-input rc-w50 padded">
-						<button class="rc-button js-logout">{{_ "Logout_Others"}}</button>
-					</div>
-					{{#if allowDeleteOwnAccount}}
-					<div class="rc-input rc-w50 padded">
-						<button class="rc-button rc-button--red js-delete-account"><i class="icon-trash"></i><span>{{_ "Delete_my_account"}}</span></button>
-					</div>
-					{{/if}}
-				</div>
+
 			</form>
 
 			<!-- <div class="rocket-form">

@@ -41,13 +41,7 @@
 			<ul class="rooms-list__list">
 
 				{{#if hasPermission 'view-kpi-administration'}}
-				{{> sidebarItem menuItem "Kpi" "kpi" "admin-kpi" "" }}
-				{{/if}}
-
-				{{> sidebarItem menuItem "Info" "info-circled" "admin-info" "" }}
-
-				{{#if hasPermission 'run-import'}}
-					{{> sidebarItem menuItem "Import" "import" "admin-import" "" }}
+				{{> sidebarItem menuItem "ダッシュボード" "kpi" "admin-kpi" "" }}
 				{{/if}}
 
 				{{#if hasPermission 'view-room-administration'}}

@@ -163,7 +163,7 @@ FlowRouter.route('/account/:group?', {
 
 	action(params) {
 		if (!params.group) {
-			params.group = 'Preferences';
+			params.group = 'profile';
 		}
 		params.group = s.capitalize(params.group, true);
 		BlazeLayout.render('main', { center: `account${ params.group }` });

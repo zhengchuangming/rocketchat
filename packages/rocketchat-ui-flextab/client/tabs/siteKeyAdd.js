@@ -24,7 +24,6 @@ Template.siteKeyAdd.helpers({
 	userRoles() {
 		return Template.instance().roles.get();
 	},
-
 	name() {
 		return this.description || this._id;
 	},
@@ -45,7 +44,9 @@ Template.siteKeyAdd.events({
 		//if duplicated key exist, try generating again
             if (result == "true")
                 key = Random.id();
+
             $('#key').val(key);
+            $('#embedText').val('<script type="text/javascript" src = "http://localhost/iframe/chat.embed.js"></script> <script type="text/javascript"> siteKey="' + key + '" </script>');
         });
     },
 	'submit form'(e, t) {

@@ -18,8 +18,8 @@ Meteor.methods({
 		//=========== create generalRoom with siteKey ==============
         const now = new Date();
         let room = Object.assign({
-            name: 'general',
-            fname: 'general',
+            name: 'ALL',
+            fname: 'ALL',
             t: 'c',
             msgs: 0,
             usersCount: 0,

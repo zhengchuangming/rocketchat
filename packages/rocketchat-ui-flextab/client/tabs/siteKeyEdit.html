@@ -40,6 +40,16 @@
 			</label>
 		</div>
 
+		<div class="rc-input rc-form-group rc-form-group--small" style="margin-top:25px">
+			<label class="rc-input__label">
+				<div class="rc-input__title">{{_ "SiteURL"}}</div>
+				<div class="rc-input__wrapper">
+
+					<textarea class="rc-input__element rc-input__element--small" id="embedText" autocomplete="off" readonly style="height: 80px;"><script type="text/javascript" src = "http://localhost/iframe/chat.embed.js"></script> <script type="text/javascript"> siteKey='{{siteKey.key}}' </script>
+					</textarea>
+				</div>
+			</label>
+		</div>
 		<div class="rc-user-info__flex rc-user-info__row">
 			<button class='rc-button rc-button--cancel cancel' type="button"><span>{{_ "Cancel"}}</span></button>
 			<button class='rc-button rc-button--primary save'><span>{{_ "Save"}}</span></button>

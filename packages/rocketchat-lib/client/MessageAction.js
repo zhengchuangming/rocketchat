@@ -256,59 +256,59 @@ Meteor.startup(function() {
         order: 3,
         group: 'menu',
     });
-
-	RocketChat.MessageAction.addButton({
-		id: 'permalink',
-		icon: 'permalink',
-		label: 'Permalink',
-		classes: 'clipboard',
-		context: ['message', 'message-mobile'],
-		async action(event) {
-			const message = this._arguments[1];
-			const permalink = await RocketChat.MessageAction.getPermaLink(message._id);
-			if (Meteor.isCordova) {
-				cordova.plugins.clipboard.copy(permalink);
-			} else {
-				$(event.currentTarget).attr('data-clipboard-text', permalink);
-			}
-			toastr.success(TAPi18n.__('Copied'));
-		},
-		condition(message) {
-			if (RocketChat.models.Subscriptions.findOne({ rid: message.rid }) == null) {
-				return false;
-			}
-
-			return true;
-		},
-		order: 4,
-		group: 'menu',
-	});
-
-	RocketChat.MessageAction.addButton({
-		id: 'copy',
-		icon: 'copy',
-		label: 'Copy',
-		classes: 'clipboard',
-		context: ['message', 'message-mobile'],
-		action(event) {
-			const message = this._arguments[1].msg;
-			if (Meteor.isCordova) {
-				cordova.plugins.clipboard.copy(message);
-			} else {
-				$(event.currentTarget).attr('data-clipboard-text', message);
-			}
-			toastr.success(TAPi18n.__('Copied'));
-		},
-		condition(message) {
-			if (RocketChat.models.Subscriptions.findOne({ rid: message.rid }) == null) {
-				return false;
-			}
-
-			return true;
-		},
-		order: 5,
-		group: 'menu',
-	});
+	//
+	// RocketChat.MessageAction.addButton({
+	// 	id: 'permalink',
+	// 	icon: 'permalink',
+	// 	label: 'Permalink',
+	// 	classes: 'clipboard',
+	// 	context: ['message', 'message-mobile'],
+	// 	async action(event) {
+	// 		const message = this._arguments[1];
+	// 		const permalink = await RocketChat.MessageAction.getPermaLink(message._id);
+	// 		if (Meteor.isCordova) {
+	// 			cordova.plugins.clipboard.copy(permalink);
+	// 		} else {
+	// 			$(event.currentTarget).attr('data-clipboard-text', permalink);
+	// 		}
+	// 		toastr.success(TAPi18n.__('Copied'));
+	// 	},
+	// 	condition(message) {
+	// 		if (RocketChat.models.Subscriptions.findOne({ rid: message.rid }) == null) {
+	// 			return false;
+	// 		}
+	//
+	// 		return true;
+	// 	},
+	// 	order: 4,
+	// 	group: 'menu',
+	// });
+	//
+	// RocketChat.MessageAction.addButton({
+	// 	id: 'copy',
+	// 	icon: 'copy',
+	// 	label: 'Copy',
+	// 	classes: 'clipboard',
+	// 	context: ['message', 'message-mobile'],
+	// 	action(event) {
+	// 		const message = this._arguments[1].msg;
+	// 		if (Meteor.isCordova) {
+	// 			cordova.plugins.clipboard.copy(message);
+	// 		} else {
+	// 			$(event.currentTarget).attr('data-clipboard-text', message);
+	// 		}
+	// 		toastr.success(TAPi18n.__('Copied'));
+	// 	},
+	// 	condition(message) {
+	// 		if (RocketChat.models.Subscriptions.findOne({ rid: message.rid }) == null) {
+	// 			return false;
+	// 		}
+	//
+	// 		return true;
+	// 	},
+	// 	order: 5,
+	// 	group: 'menu',
+	// });
 
 	RocketChat.MessageAction.addButton({
 		id: 'quote-message',

@@ -10,14 +10,12 @@
 		</header>
 		<div class="rooms-list {{#if embeddedVersion}}rooms-list--embedded{{/if}}">
 			<ul class="rooms-list__list">
-				{{> sidebarItem menuItem "Preferences" "customize" "account" "preferences" }}
+				<!--{{> sidebarItem menuItem "Preferences" "customize" "account" "preferences" }}-->
 
 				{{#if allowUserProfileChange}}
 					{{> sidebarItem menuItem "Profile" "user" "account" "profile" }}
 				{{/if}}
 
-				{{> sidebarItem menuItem "Security" "lock" "account" "security" }}
-				
 				{{#if encryptionEnabled}}
 					{{> sidebarItem menuItem "Encryption" "key" "account" "encryption" }}
 				{{/if}}

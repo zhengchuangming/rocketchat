@@ -41,96 +41,9 @@ const toolbarButtons = (user) => [{
 	},
 },
 {
-	name: t('ディレクトリ'),
-	icon: 'globe',
-	action: () => {
-		menu.close();
-		FlowRouter.go('directory');
-	},
-},
-{
-	name: t('表示方法'),
-	icon: () => viewModeIcon[RocketChat.getUserPreference(user, 'sidebarViewMode') || 'condensed'],
-	action: (e) => {
-		const hideAvatarSetting = RocketChat.getUserPreference(user, 'sidebarHideAvatar');
-		const config = {
-			columns: [
-				{
-					groups: [
-						{
-							items: [
-								extendedViewOption(user),
-								{
-									icon: viewModeIcon.medium,
-									name: t('ミディアム'),
-									modifier: RocketChat.getUserPreference(user, 'sidebarViewMode') === 'medium' ? 'bold' : null,
-									action: () => {
-										Meteor.call('saveUserPreferences', { sidebarViewMode: 'medium' }, function(error) {
-											if (error) {
-												return handleError(error);
-											}
-										});
-									},
-								},
-								{
-									icon: viewModeIcon.condensed,
-									name: t('凝縮'),
-									modifier: RocketChat.getUserPreference(user, 'sidebarViewMode') === 'condensed' ? 'bold' : null,
-									action: () => {
-										Meteor.call('saveUserPreferences', { sidebarViewMode: 'condensed' }, function(error) {
-											if (error) {
-												return handleError(error);
-											}
-										});
-									},
-								},
-							],
-						},
-						{
-							items: [
-								{
-									icon: 'user-rounded',
-									name: hideAvatarSetting ? t('Show_Avatars') : t('アバター隠す'),
-									action: () => {
-										Meteor.call('saveUserPreferences', { sidebarHideAvatar: !hideAvatarSetting }, function(error) {
-											if (error) {
-												return handleError(error);
-											}
-										});
-									},
-								},
-							],
-						},
-					],
-				},
-			],
-			currentTarget: e.currentTarget,
-			offsetVertical: e.currentTarget.clientHeight + 10,
-		};
-
-		popover.open(config);
-	},
-},
-{
-	name: t('ソート'),
-	icon: 'sort',
-	action: (e) => {
-		const options = [];
-		const config = {
-			template: 'sortlist',
-			currentTarget: e.currentTarget,
-			data: {
-				options,
-			},
-			offsetVertical: e.currentTarget.clientHeight + 10,
-		};
-		popover.open(config);
-	},
-},
-{
 	name: t('新しいチャンネル作成'),
 	icon: 'edit-rounded',
-	condition: () => RocketChat.authz.hasAtLeastOnePermission(['create-c', 'create-p']),
+	condition: () => RocketChat.authz.hasAtLeastOnePermission(['view-sitekey-administration']),
 	action: () => {
 		menu.close();
 		FlowRouter.go('create-channel');
@@ -236,35 +149,6 @@ Template.sidebarHeader.events({
 				columns: [
 					{
 						groups: [
-							{
-								title: t('ユーザー'),
-								items: [
-									{
-										icon: 'circle',
-										name: t('オンライン'),
-										modifier: 'online',
-										action: () => setStatus('online'),
-									},
-									{
-										icon: 'circle',
-										name: t('離れて'),
-										modifier: 'away',
-										action: () => setStatus('away'),
-									},
-									{
-										icon: 'circle',
-										name: t('忙しい'),
-										modifier: 'busy',
-										action: () => setStatus('busy'),
-									},
-									{
-										icon: 'circle',
-										name: t('目に見えない'),
-										modifier: 'offline',
-										action: () => setStatus('offline'),
-									},
-								],
-							},
 							{
 								items: [
 									{

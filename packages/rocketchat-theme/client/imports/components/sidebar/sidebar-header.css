@@ -63,14 +63,12 @@
 
 .sidebar__toolbar {
 	display: flex;
-	flex: 1 1 100%;
-
 	margin: 0 10px;
 	justify-content: space-between;
 
 	&-button {
 		color: var(--sidebar-item-text-color);
-
+		margin-right:20px;
 		font-size: 18px;
 		fill: var(--sidebar-item-text-color);
 	}
